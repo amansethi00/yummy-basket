@@ -1,7 +1,9 @@
 import {useCart} from "./cart-context";
+import {IncDecButton} from "./IncDecButton";
 export function Cart() {
   const {
     value: {cart},
+    dispatch,
   } = useCart();
   return (
     <div className="card flex col justify-content-center align-items-center">
@@ -16,12 +18,17 @@ export function Cart() {
                 style={{width: "3.5rem", height: "100%"}}
                 alt="product-img"
               ></img>
-              <div className="pd-left-half">
+              <div className="pd-left-half col">
                 {item.name}
                 <div>
-                  <button class="btn-primary ">-</button>
+                  <IncDecButton
+                    cart={cart}
+                    product={item}
+                    dispatch={dispatch}
+                  />
+                  {/* <button class="btn-primary ">-</button>
                   {item.quantity}
-                  <button class="btn-primary">+</button>
+                  <button class="btn-primary">+</button> */}
                 </div>
               </div>
             </div>

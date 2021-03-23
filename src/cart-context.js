@@ -69,13 +69,17 @@ const reducer = (state, action) => {
               prev.id === action.item.id ? {...prev, inCart: false} : prev
             ),
           };
+    case "SORT_LOW_TO_HIGH":
+      return {...state, sortBy: "SORT_LOW_TO_HIGH"};
+    case "SORT_HIGH_TO_LOW":
+      return {...state, sortBy: "SORT_HIGH_TO_LOW"};
     default:
       return {...state};
   }
 };
 export const CartContext = createContext();
 export function CartProvider({children}) {
-  const [value, dispatch] = useReducer(reducer, {data, cart: []});
+  const [value, dispatch] = useReducer(reducer, {data, cart: [], sortBy: null});
   console.log(value);
   return (
     <CartContext.Provider value={{value, dispatch}}>

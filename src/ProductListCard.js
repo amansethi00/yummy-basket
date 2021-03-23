@@ -1,5 +1,5 @@
 import {useCart} from "./cart-context";
-import "./ProductListCard.css";
+import {IncDecButton} from "./IncDecButton";
 export function ProductListCard({product}) {
   const {
     dispatch,
@@ -20,35 +20,13 @@ export function ProductListCard({product}) {
             ₹125
           </div>
         </div>
-
-        <div className="gray text-left" style={{height: "2rem"}}>
+        <div className="gray bold text-left" style={{height: "2rem"}}>
           {product.name}
         </div>
         <div className="gray sm pd-top-half pd-bottom-1">Qty:1kg</div>
         {product.inCart ? (
           <div className="flex row align-items-center justify-content-space-between">
-            <button
-              className="btn-primary lg"
-              onClick={() =>
-                dispatch({
-                  type: "DECREMENT_QUANTITY",
-                  item: [...cart.filter((prev) => prev.id === product.id)][0],
-                })
-              }
-            >
-              -
-            </button>
-            <div className="">
-              {cart.filter((prev) => prev.id === product.id)[0].quantity}
-            </div>
-            <button
-              className="btn-primary lg"
-              onClick={() =>
-                dispatch({type: "INCREMENT_QUANTITY", item: product})
-              }
-            >
-              +
-            </button>
+            <IncDecButton product={product} dispatch={dispatch} cart={cart} />
           </div>
         ) : (
           <button
@@ -58,7 +36,7 @@ export function ProductListCard({product}) {
               dispatch({type: "ADD_TO_CART", item: {...product, quantity: 1}})
             }
           >
-            Add
+            ADD
           </button>
         )}
       </div>
