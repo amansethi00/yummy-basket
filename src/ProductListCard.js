@@ -25,9 +25,7 @@ export function ProductListCard({product}) {
         </div>
         <div className="gray sm pd-top-half pd-bottom-1">Qty:1kg</div>
         {product.inCart ? (
-          <div className="flex row align-items-center justify-content-space-between">
-            <IncDecButton product={product} dispatch={dispatch} cart={cart} />
-          </div>
+          <IncDecButton product={product} dispatch={dispatch} cart={cart} />
         ) : (
           <button
             className="btn-primary-sm "

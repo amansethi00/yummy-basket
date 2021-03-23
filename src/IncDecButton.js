@@ -1,6 +1,9 @@
 export function IncDecButton({cart, product, dispatch}) {
   return (
-    <>
+    <div
+      className="flex row align-items-center justify-content-space-between"
+      style={{width: "12rem"}}
+    >
       <button
         className="btn-primary lg"
         onClick={() =>
@@ -21,6 +24,6 @@ export function IncDecButton({cart, product, dispatch}) {
       >
         +
       </button>
-    </>
+    </div>
   );
 }

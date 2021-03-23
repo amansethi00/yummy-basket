@@ -11,25 +11,16 @@ export function Cart() {
       <ul class="list-group">
         {cart.map((item) => {
           return (
-            <div class="card card-body flex row" style={{width: "15rem"}}>
+            <div class=" card-body flex row ">
               <img
                 src={item.image}
                 className="card-image"
-                style={{width: "3.5rem", height: "100%"}}
+                style={{width: "5rem", height: "100%"}}
                 alt="product-img"
               ></img>
-              <div className="pd-left-half col">
+              <div className="pd-left-half flex col bold justify-content-space-between">
                 {item.name}
-                <div>
-                  <IncDecButton
-                    cart={cart}
-                    product={item}
-                    dispatch={dispatch}
-                  />
-                  {/* <button class="btn-primary ">-</button>
-                  {item.quantity}
-                  <button class="btn-primary">+</button> */}
-                </div>
+                <IncDecButton cart={cart} product={item} dispatch={dispatch} />
               </div>
             </div>
           );
