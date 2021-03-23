@@ -30,7 +30,10 @@ export function ProductListCard({product}) {
             <button
               className="btn-primary lg"
               onClick={() =>
-                dispatch({type: "DECREMENT_QUANTITY", item: product})
+                dispatch({
+                  type: "DECREMENT_QUANTITY",
+                  item: [...cart.filter((prev) => prev.id === product.id)][0],
+                })
               }
             >
               -
