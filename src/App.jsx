@@ -1,12 +1,14 @@
 import './App.css';
-import {ProductList} from "./ProductList";
-import {Cart} from "./Cart";
-import { useTheme } from "./theme-context";
-import {useCart} from "./cart-context";
+import {ProductList} from "./components/ProductList";
+import {WishList} from "./components/WishList";
+import {Cart} from "./components/Cart";
+import { useTheme } from "./context/theme-context";
+import {useCart} from "./context/cart-context";
 import { useState } from 'react';
 import {ReactComponent as DarkTheme} from "./asssets/dark-theme-white.svg";
 import {ReactComponent as LightTheme} from "./asssets/dark-theme.svg";
 import {ReactComponent as CartSvg} from "./asssets/cart.svg";
+import {ReactComponent as WishlistSvg} from "./asssets/wishlist.svg";
 const selectedTheme={
   "light":{
     bg:"white",
@@ -33,10 +35,13 @@ function App() {
             <CartSvg/>
         {cart.reduce(((acc,curr)=>acc+curr.quantity),0)}
         </button>
+        <button>
+          <WishlistSvg onClick={()=>setRoute("wishList")}/>
+        </button>
         <button onClick={toggleTheme}>{theme==="light"?<DarkTheme/>:<LightTheme/>}</button>
         </div>
       </nav>
-      {route==="productList"?<ProductList/>:<Cart/>
+      {route==="productList"?<ProductList/>:route==="cart"?<Cart/>:<WishList/>
 }
     </div>
   );

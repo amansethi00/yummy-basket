@@ -16,6 +16,7 @@ const data = [...Array(50)].map((item) => ({
     "70% bonanza",
     "Republic Day Sale",
   ]),
+  inWishlist: false,
   idealFor: faker.random.arrayElement([
     "Men",
     "Women",
@@ -73,13 +74,34 @@ const reducer = (state, action) => {
       return {...state, sortBy: "SORT_LOW_TO_HIGH"};
     case "SORT_HIGH_TO_LOW":
       return {...state, sortBy: "SORT_HIGH_TO_LOW"};
+    case "ADD_TO_WISHLIST":
+      return {
+        ...state,
+        data: state.data.map((prev) =>
+          prev.id === action.item.id ? {...prev, inWishlist: true} : prev
+        ),
+        wishlist: state.wishlist.concat(action.item),
+      };
+    case "REMOVE_FROM_WISHLIST":
+      return {
+        ...state,
+        data: state.data.map((prev) =>
+          prev.id === action.item.id ? {...prev, inWishlist: false} : prev
+        ),
+        wishlist: state.wishlist.filter((prev) => prev.id !== action.item.id),
+      };
     default:
       return {...state};
   }
 };
 export const CartContext = createContext();
 export function CartProvider({children}) {
-  const [value, dispatch] = useReducer(reducer, {data, cart: [], sortBy: null});
+  const [value, dispatch] = useReducer(reducer, {
+    data,
+    cart: [],
+    wishlist: [],
+    sortBy: null,
+  });
   console.log(value);
   return (
     <CartContext.Provider value={{value, dispatch}}>

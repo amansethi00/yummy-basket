@@ -1,18 +1,45 @@
-import {useCart} from "./cart-context";
+import {useCart} from "../context/cart-context";
 import {IncDecButton} from "./IncDecButton";
+import {ReactComponent as WishlistSvg} from "../asssets/wishlist.svg";
+import {ReactComponent as WishlistedSvg} from "../asssets/heart.svg";
 export function ProductListCard({product}) {
   const {
     dispatch,
     value: {cart},
   } = useCart();
   return (
-    <div className="card card-shadow-1 mg-1" style={{width: "12.5rem"}}>
+    <div
+      className="card card-shadow-1 mg-1 relative"
+      style={{width: "12.5rem"}}
+    >
       <img
         className="card-image"
         src={product.image}
         alt="product-list"
         style={{height: "8rem"}}
       ></img>
+      <button
+        className="outline-none"
+        style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
+      >
+        {product.inWishlist === true ? (
+          <WishlistedSvg
+            onClick={() =>
+              dispatch({type: "REMOVE_FROM_WISHLIST", item: product})
+            }
+          />
+        ) : (
+          <WishlistSvg
+            onClick={() =>
+              dispatch({
+                type: "ADD_TO_WISHLIST",
+                item: {...product, inWishlist: true},
+              })
+            }
+          />
+        )}
+      </button>
+
       <div className="card-body text-left pd-quarter">
         <div className="flex row align-items-center">
           <div className="bold ">₹{product.price}</div>
@@ -24,7 +51,7 @@ export function ProductListCard({product}) {
           {product.name}
         </div>
         <div className="gray sm pd-top-half pd-bottom-1">Qty:1kg</div>
-        {product.inCart ? (
+        {cart.filter((prev) => prev.id === product.id).length > 0 ? (
           <IncDecButton product={product} dispatch={dispatch} cart={cart} />
         ) : (
           <button

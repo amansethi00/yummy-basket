@@ -1,4 +1,4 @@
-import {useCart} from "./cart-context";
+import {useCart} from "../context/cart-context";
 import {ProductListCard} from "./ProductListCard";
 export function ProductList() {
   const compareLowToHigh = (a, b) => {
