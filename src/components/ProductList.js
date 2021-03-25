@@ -8,7 +8,6 @@ export function ProductList() {
     return b["price"] - a["price"];
   };
   const getSorted = (data, sortBy) => {
-    console.log("get sorted");
     switch (sortBy) {
       case "SORT_LOW_TO_HIGH":
         return data.sort(compareLowToHigh);
@@ -18,11 +17,25 @@ export function ProductList() {
         return [...data];
     }
   };
+  const filteredData = (data, fastDelivery, includeOutOfStock) => {
+    const fastDeliveryFilter =
+      fastDelivery === true
+        ? data.filter(({fastDelivery}) => fastDelivery)
+        : data;
+    console.log({fastDeliveryFilter});
+    const includeOutOfStockFilter =
+      includeOutOfStock === true
+        ? fastDeliveryFilter
+        : fastDeliveryFilter.filter(({inStock}) => inStock);
+    console.log({includeOutOfStockFilter});
+    return includeOutOfStockFilter;
+  };
   const {
-    value: {data, sortBy},
+    value: {data, sortBy, fastDelivery, includeOutOfStock},
     dispatch,
   } = useCart();
   const sortedData = getSorted(data, sortBy);
+  const viewData = filteredData(sortedData, fastDelivery, includeOutOfStock);
   console.log(data);
   return (
     <div className="text-center">
@@ -45,8 +58,26 @@ export function ProductList() {
         ></input>
         Sort High To Low
       </label>
+      <br />
+      Filter By
+      <label>
+        <input
+          type="checkbox"
+          checked={fastDelivery}
+          onChange={() => dispatch({type: "TOGGLE_FAST_DELIVERY"})}
+        ></input>
+        Fast Delivery Only
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          onChange={() => dispatch({type: "TOGGLE_OUT_OF_STOCK"})}
+          checked={includeOutOfStock}
+        ></input>
+        Include Out of stock
+      </label>
       <div className="flex row card card-body justify-content-center">
-        {sortedData.map((product) => {
+        {viewData.map((product) => {
           return <ProductListCard product={product} dispatch={dispatch} />;
         })}
       </div>

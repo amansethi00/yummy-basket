@@ -18,6 +18,9 @@ export function ProductListCard({product}) {
         alt="product-list"
         style={{height: "8rem"}}
       ></img>
+      {product.inStock === false && (
+        <div class="card-text-overlay ">OUT OF STOCK</div>
+      )}
       <button
         className="outline-none"
         style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
@@ -50,7 +53,11 @@ export function ProductListCard({product}) {
         <div className="gray bold text-left" style={{height: "2rem"}}>
           {product.name}
         </div>
-        <div className="gray sm pd-top-half pd-bottom-1">Qty:1kg</div>
+        <div className="gray sm pd-top-half pd-bottom-1">
+          Qty:1kg
+          <br />
+          {product.fastDelivery && <>Fast Delivery Available</>}
+        </div>
         {cart.filter((prev) => prev.id === product.id).length > 0 ? (
           <IncDecButton product={product} dispatch={dispatch} cart={cart} />
         ) : (

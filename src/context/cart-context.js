@@ -74,6 +74,10 @@ const reducer = (state, action) => {
       return {...state, sortBy: "SORT_LOW_TO_HIGH"};
     case "SORT_HIGH_TO_LOW":
       return {...state, sortBy: "SORT_HIGH_TO_LOW"};
+    case "TOGGLE_OUT_OF_STOCK":
+      return {...state, includeOutOfStock: !state.includeOutOfStock};
+    case "TOGGLE_FAST_DELIVERY":
+      return {...state, fastDelivery: !state.fastDelivery};
     case "ADD_TO_WISHLIST":
       return {
         ...state,
@@ -101,6 +105,8 @@ export function CartProvider({children}) {
     cart: [],
     wishlist: [],
     sortBy: null,
+    includeOutOfStock: false,
+    fastDelivery: false,
   });
   console.log(value);
   return (
