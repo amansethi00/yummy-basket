@@ -94,6 +94,13 @@ const reducer = (state, action) => {
         ),
         wishlist: state.wishlist.filter((prev) => prev.id !== action.item.id),
       };
+    case "RESET":
+      return {
+        ...state,
+        sortBy: null,
+        fastDelivery: false,
+        includeOutOfStock: false,
+      };
     default:
       return {...state};
   }

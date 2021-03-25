@@ -40,43 +40,51 @@ export function ProductList() {
   return (
     <div className="text-center">
       <h2>Product Listing</h2>
-      <label>
+      <form>
+        <label>
+          <input
+            type="radio"
+            name="sort"
+            checked={sortBy === "SORT_LOW_TO_HIGH" ? true : false}
+            onChange={() => dispatch({type: "SORT_LOW_TO_HIGH"})}
+          ></input>
+          Sort Low To High
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="sort"
+            checked={sortBy === "SORT_HIGH_TO_LOW" ? true : false}
+            onChange={() => dispatch({type: "SORT_HIGH_TO_LOW"})}
+          ></input>
+          Sort High To Low
+        </label>
+        <br />
+        Filter By
+        <label>
+          <input
+            type="checkbox"
+            checked={fastDelivery}
+            onChange={() => dispatch({type: "TOGGLE_FAST_DELIVERY"})}
+          ></input>
+          Fast Delivery Only
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            onChange={() => dispatch({type: "TOGGLE_OUT_OF_STOCK"})}
+            checked={includeOutOfStock}
+          ></input>
+          Include Out of stock
+        </label>
+        <br />
         <input
-          type="radio"
-          name="sort"
-          checked={sortBy === "SORT_LOW_TO_HIGH" ? true : false}
-          onChange={() => dispatch({type: "SORT_LOW_TO_HIGH"})}
-        ></input>
-        Sort Low To High
-      </label>
-      <label>
-        <input
-          type="radio"
-          name="sort"
-          checked={sortBy === "SORT_HIGH_TO_LOW" ? true : false}
-          onChange={() => dispatch({type: "SORT_HIGH_TO_LOW"})}
-        ></input>
-        Sort High To Low
-      </label>
-      <br />
-      Filter By
-      <label>
-        <input
-          type="checkbox"
-          checked={fastDelivery}
-          onChange={() => dispatch({type: "TOGGLE_FAST_DELIVERY"})}
-        ></input>
-        Fast Delivery Only
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          onChange={() => dispatch({type: "TOGGLE_OUT_OF_STOCK"})}
-          checked={includeOutOfStock}
-        ></input>
-        Include Out of stock
-      </label>
-      <div className="flex row card card-body justify-content-center">
+          type="reset"
+          onClick={() => dispatch({type: "RESET"})}
+          className="outline-none btn-secondary-sm mg-top-half"
+        />
+      </form>
+      <div className="flex row card card-body justify-content-center mg-top-half">
         {viewData.map((product) => {
           return <ProductListCard product={product} dispatch={dispatch} />;
         })}

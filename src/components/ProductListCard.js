@@ -67,6 +67,7 @@ export function ProductListCard({product}) {
             onClick={() =>
               dispatch({type: "ADD_TO_CART", item: {...product, quantity: 1}})
             }
+            disabled={product.inStock === false}
           >
             ADD
           </button>
