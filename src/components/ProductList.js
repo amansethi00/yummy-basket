@@ -7,21 +7,21 @@ export function ProductList() {
   const compareHighToLow = (a, b) => {
     return b["price"] - a["price"];
   };
-  const getSorted = (data, sortBy) => {
+  const getSorted = (prodList, sortBy) => {
     switch (sortBy) {
       case "SORT_LOW_TO_HIGH":
-        return data.sort(compareLowToHigh);
+        return prodList.sort(compareLowToHigh);
       case "SORT_HIGH_TO_LOW":
-        return data.sort(compareHighToLow);
+        return prodList.sort(compareHighToLow);
       default:
-        return [...data];
+        return prodList;
     }
   };
-  const filteredData = (data, fastDelivery, includeOutOfStock) => {
+  const filteredData = (prodArray, fastDelivery, includeOutOfStock) => {
     const fastDeliveryFilter =
       fastDelivery === true
-        ? data.filter(({fastDelivery}) => fastDelivery)
-        : data;
+        ? prodArray.filter(({fastDelivery}) => fastDelivery)
+        : prodArray;
     console.log({fastDeliveryFilter});
     const includeOutOfStockFilter =
       includeOutOfStock === true
@@ -36,7 +36,7 @@ export function ProductList() {
   } = useCart();
   const sortedData = getSorted(data, sortBy);
   const viewData = filteredData(sortedData, fastDelivery, includeOutOfStock);
-  console.log(data);
+  console.log({data}, {viewData});
   return (
     <div className="text-center">
       <h2>Product Listing</h2>

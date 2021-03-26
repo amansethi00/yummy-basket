@@ -1,41 +1,11 @@
 import {createContext, useContext, useReducer} from "react";
-import faker from "faker";
-const data = [...Array(50)].map((item) => ({
-  id: faker.random.uuid(),
-  name: faker.commerce.productName(),
-  image: faker.random.image(),
-  price: faker.commerce.price(),
-  material: faker.commerce.productMaterial(),
-  brand: faker.lorem.word(),
-  inStock: faker.random.boolean(),
-  inCart: false,
-  fastDelivery: faker.random.boolean(),
-  ratings: faker.random.arrayElement([1, 2, 3, 4, 5]),
-  offer: faker.random.arrayElement([
-    "Save 50",
-    "70% bonanza",
-    "Republic Day Sale",
-  ]),
-  inWishlist: false,
-  idealFor: faker.random.arrayElement([
-    "Men",
-    "Women",
-    "Girl",
-    "Boy",
-    "Senior",
-  ]),
-  level: faker.random.arrayElement([
-    "beginner",
-    "amateur",
-    "intermediate",
-    "advanced",
-    "professional",
-  ]),
-  color: faker.commerce.color(),
-}));
-
-const reducer = (state, action) => {
+function reducer(state, action) {
   switch (action.type) {
+    case "SET_DATA":
+      return {
+        ...state,
+        data: action.data,
+      };
     case "ADD_TO_CART":
       return {
         ...state,
@@ -104,11 +74,11 @@ const reducer = (state, action) => {
     default:
       return {...state};
   }
-};
+}
 export const CartContext = createContext();
 export function CartProvider({children}) {
   const [value, dispatch] = useReducer(reducer, {
-    data,
+    data: [],
     cart: [],
     wishlist: [],
     sortBy: null,
@@ -116,6 +86,7 @@ export function CartProvider({children}) {
     fastDelivery: false,
   });
   console.log(value);
+
   return (
     <CartContext.Provider value={{value, dispatch}}>
       {children}

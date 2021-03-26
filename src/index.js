@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App";
 import {CartProvider} from "./context/cart-context";
 import {ThemeProvider} from "./context/theme-context";
+import setupMockServer from "./api/mock.server";
+setupMockServer();
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>

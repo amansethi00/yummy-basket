@@ -69,7 +69,7 @@ export function ProductListCard({product}) {
             }
             disabled={product.inStock === false}
           >
-            ADD
+            ADD TO CART
           </button>
         )}
       </div>

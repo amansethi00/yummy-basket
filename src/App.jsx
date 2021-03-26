@@ -9,6 +9,7 @@ import {ReactComponent as DarkTheme} from "./asssets/dark-theme-white.svg";
 import {ReactComponent as LightTheme} from "./asssets/dark-theme.svg";
 import {ReactComponent as CartSvg} from "./asssets/cart.svg";
 import {ReactComponent as WishlistSvg} from "./asssets/wishlist.svg";
+import {useAxios} from "./useAxios";
 const selectedTheme={
   "light":{
     bg:"white",
@@ -23,6 +24,7 @@ function App() {
   const {theme,toggleTheme} = useTheme();
   const {value:{cart}}=useCart();
   const [route,setRoute]= useState("productList");
+  const {getData}=useAxios();
   return (
     <div style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color,minHeight:"100vh"}}>
       <nav className="nav">
