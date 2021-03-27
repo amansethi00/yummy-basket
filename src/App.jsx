@@ -5,11 +5,11 @@ import {Cart} from "./components/Cart";
 import { useTheme } from "./context/theme-context";
 import {useCart} from "./context/cart-context";
 import { useState } from 'react';
+import {useAxios} from "./useAxios";
 import {ReactComponent as DarkTheme} from "./asssets/dark-theme-white.svg";
 import {ReactComponent as LightTheme} from "./asssets/dark-theme.svg";
 import {ReactComponent as CartSvg} from "./asssets/cart.svg";
 import {ReactComponent as WishlistSvg} from "./asssets/wishlist.svg";
-import {useAxios} from "./useAxios";
 const selectedTheme={
   "light":{
     bg:"white",
@@ -24,7 +24,7 @@ function App() {
   const {theme,toggleTheme} = useTheme();
   const {value:{cart}}=useCart();
   const [route,setRoute]= useState("productList");
-  const {getData}=useAxios();
+  const {loading,error}=useAxios();
   return (
     <div style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color,minHeight:"100vh"}}>
       <nav className="nav">
@@ -45,6 +45,10 @@ function App() {
       </nav>
       {route==="productList"?<ProductList/>:route==="cart"?<Cart/>:<WishList/>
 }
+    <div className="text-center">
+      {loading && <h3>Loading data from server...</h3>}
+      {error!=="" && <h3>{error}</h3>}
+    </div>
     </div>
   );
 }

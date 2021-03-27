@@ -36,7 +36,8 @@ export function ProductList() {
   } = useCart();
   const sortedData = getSorted(data, sortBy);
   const viewData = filteredData(sortedData, fastDelivery, includeOutOfStock);
-  console.log({data}, {viewData});
+  // console.log({data}, {viewData});
+
   return (
     <div className="text-center">
       <h2>Product Listing</h2>
