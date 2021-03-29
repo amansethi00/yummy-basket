@@ -7,6 +7,7 @@ export function ProductListCard({product}) {
     dispatch,
     value: {cart},
   } = useCart();
+
   return (
     <div
       className="card card-shadow-1 mg-1 relative"
@@ -26,13 +27,17 @@ export function ProductListCard({product}) {
         style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
       >
         {product.inWishlist === true ? (
-          <WishlistedSvg
+          <button
+            className="outline-none"
             onClick={() =>
               dispatch({type: "REMOVE_FROM_WISHLIST", item: product})
             }
-          />
+          >
+            <WishlistedSvg />
+          </button>
         ) : (
           <WishlistSvg
+            style={{fill: "white"}}
             onClick={() =>
               dispatch({
                 type: "ADD_TO_WISHLIST",
@@ -53,17 +58,19 @@ export function ProductListCard({product}) {
         <div className="gray bold text-left" style={{height: "2rem"}}>
           {product.name}
         </div>
-        <div className="gray sm pd-top-half pd-bottom-1">
+        <div
+          className="gray sm pd-top-half pd-bottom-half"
+          style={{height: "2rem"}}
+        >
           Qty:1kg
-          <br />
-          {product.fastDelivery && <>Fast Delivery Available</>}
+          <div>{product.fastDelivery && <>Fast Delivery Available</>}</div>
         </div>
         {cart.filter((prev) => prev.id === product.id).length > 0 ? (
           <IncDecButton product={product} dispatch={dispatch} cart={cart} />
         ) : (
           <button
             className="btn-primary-sm "
-            style={{width: "100%"}}
+            style={{width: "100%", alignSelf: "baseline"}}
             onClick={() =>
               dispatch({type: "ADD_TO_CART", item: {...product, quantity: 1}})
             }

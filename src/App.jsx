@@ -22,23 +22,24 @@ const selectedTheme={
 }
 function App() {
   const {theme,toggleTheme} = useTheme();
-  const {value:{cart}}=useCart();
+  const {value:{cart,wishlist}}=useCart();
   const [route,setRoute]= useState("productList");
   const {loading,error}=useAxios();
   return (
     <div style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color,minHeight:"100vh"}}>
-      <nav className="nav">
+      <nav className="nav" style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color}} >
         <div className="nav-left">
           <div className="md">YummyBasket</div>
         </div>
         <div className="nav-right flex row align-center">
-          <button className="btn-secondary white" onClick={()=>setRoute("productList")}> All Products</button>
-          <button className="btn-secondary-sm white flex row align-center md hover-none" onClick={()=>setRoute("cart")}>
-            <CartSvg/>
+          <button onClick={()=>setRoute("productList")} style={{color:selectedTheme[theme].color}}> All Products</button>
+          <button className="  flex row align-center sm " onClick={()=>setRoute("cart")} style={{color:selectedTheme[theme].color}}>
+            <CartSvg style={{fill:selectedTheme[theme].color}}/>
         {cart.reduce(((acc,curr)=>acc+curr.quantity),0)}
         </button>
-        <button>
-          <WishlistSvg onClick={()=>setRoute("wishList")}/>
+        <button className=" flex row align-center sm bg-transparent" onClick={()=>setRoute("wishList")} style={{color:selectedTheme[theme].color}}>
+          <WishlistSvg style={{fill:selectedTheme[theme].color}}/>
+          {wishlist.length}
         </button>
         <button onClick={toggleTheme}>{theme==="light"?<DarkTheme/>:<LightTheme/>}</button>
         </div>

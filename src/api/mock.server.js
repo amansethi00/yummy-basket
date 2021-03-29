@@ -9,12 +9,16 @@ export default function setupMockServer() {
 
     models: {
       item: Model,
+      wishList: Model,
+      cartList: Model,
     },
 
     routes() {
       this.namespace = "api";
       this.timing = 3000;
       this.resource("items");
+      this.resource("wishLists");
+      this.resource("cartLists");
     },
 
     seeds(server) {
