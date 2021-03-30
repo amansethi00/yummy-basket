@@ -1,5 +1,5 @@
-import {useCart} from "../context/cart-context";
-import {ProductListCard} from "./ProductListCard";
+import {useCart} from "../../context/cart-context";
+import {ProductListCard} from "../Product/ProductListCard";
 export function WishList() {
   const {
     value: {wishlist},

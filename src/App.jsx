@@ -1,7 +1,7 @@
 import './App.css';
-import {ProductList} from "./components/ProductList";
-import {WishList} from "./components/WishList";
-import {Cart} from "./components/Cart";
+import {ProductList} from "./components/Product/ProductList";
+import {WishList} from "./components/Wishlist/WishList";
+import {CartList} from "./components/Cart/CartList";
 import { useTheme } from "./context/theme-context";
 import {useCart} from "./context/cart-context";
 import { useState } from 'react';
@@ -44,7 +44,7 @@ function App() {
         <button onClick={toggleTheme}>{theme==="light"?<DarkTheme/>:<LightTheme/>}</button>
         </div>
       </nav>
-      {route==="productList"?<ProductList/>:route==="cart"?<Cart/>:<WishList/>
+      {route==="productList"?<ProductList/>:route==="cart"?<CartList/>:<WishList/>
 }
     <div className="text-center">
       {loading && <h3>Loading data from server...</h3>}

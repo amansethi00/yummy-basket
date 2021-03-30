@@ -1,7 +1,7 @@
-import {useCart} from "../context/cart-context";
-import {IncDecButton} from "./IncDecButton";
-import {ReactComponent as WishlistSvg} from "../asssets/wishlist.svg";
-import {ReactComponent as WishlistedSvg} from "../asssets/heart.svg";
+import {useCart} from "../../context/cart-context";
+import {IncDecButton} from "../Button/IncDecButton";
+import {ReactComponent as WishlistSvg} from "../../asssets/wishlist.svg";
+import {ReactComponent as WishlistedSvg} from "../../asssets/heart.svg";
 export function ProductListCard({product}) {
   const {
     dispatch,

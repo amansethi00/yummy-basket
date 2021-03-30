@@ -1,7 +1,7 @@
-import {useCart} from "../context/cart-context";
-import {IncDecButton} from "./IncDecButton";
+import {useCart} from "../../context/cart-context";
+import {IncDecButton} from "../Button/IncDecButton";
 import "./Cart.css";
-export function Cart() {
+export function CartList() {
   const {
     value: {cart},
     dispatch,
