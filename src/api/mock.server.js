@@ -15,10 +15,38 @@ export default function setupMockServer() {
 
     routes() {
       this.namespace = "api";
-      this.timing = 3000;
+      this.timing = 1000;
       this.resource("items");
+      this.patch("/items/:id", (schema, request) => {
+        let newAttrs = JSON.parse(request.requestBody);
+        let id = request.params.id;
+        let item = schema.items.find(id);
+        return item.update(newAttrs);
+      });
       this.resource("wishLists");
+      this.post("/wishLists", (schema, request) => {
+        let attrs = JSON.parse(request.requestBody);
+        return schema.wishLists.create(attrs);
+      });
+      this.delete("/wishLists/:id", (schema, request) => {
+        let id = request.params.id;
+        return schema.wishLists.find(id).destroy();
+      });
       this.resource("cartLists");
+      this.post("/cartLists", (schema, request) => {
+        let attrs = JSON.parse(request.requestBody);
+        return schema.cartLists.create(attrs);
+      });
+      this.delete("/cartLists/:id", (schema, request) => {
+        let id = request.params.id;
+        return schema.cartLists.find(id).destroy();
+      });
+      this.patch("/cartLists/:id", (schema, request) => {
+        let newAttrs = JSON.parse(request.requestBody);
+        let id = request.params.id;
+        let item = schema.items.find(id);
+        return item.update(newAttrs);
+      });
     },
 
     seeds(server) {

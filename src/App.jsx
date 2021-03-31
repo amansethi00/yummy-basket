@@ -22,9 +22,15 @@ const selectedTheme={
 }
 function App() {
   const {theme,toggleTheme} = useTheme();
-  const {value:{cart,wishlist}}=useCart();
+  const {value:{cart,wishlist},showToast,setShowToast,textToast}=useCart();
   const [route,setRoute]= useState("productList");
   const {loading,error}=useAxios();
+  console.log(textToast);
+  if(showToast===true){
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000);
+  }
   return (
     <div style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color,minHeight:"100vh"}}>
       <nav className="nav" style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color}} >
@@ -44,14 +50,18 @@ function App() {
         <button onClick={toggleTheme}>{theme==="light"?<DarkTheme/>:<LightTheme/>}</button>
         </div>
       </nav>
-      {route==="productList"?<ProductList/>:route==="cart"?<CartList/>:<WishList/>
-}
-    <div className="text-center">
-      {loading && <h3>Loading data from server...</h3>}
-      {error!=="" && <h3>{error}</h3>}
+      {route==="productList"?<ProductList/>:route==="cart"?<CartList/>:<WishList/>}
+
+      <div className="text-center">
+        {loading && <h3>Loading data from server...</h3>}
+        {error!=="" && <h3>{error}</h3>}
+      </div>
+      {showToast && <div className="toast-info" style={{position:"fixed",left:"8px",bottom:"8px"}}>
+        {textToast}
+        <button class="outline-none">X </button>       
+         </div>}
     </div>
-    </div>
-  );
+  )
 }
 
 export default App;

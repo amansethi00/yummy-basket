@@ -27,8 +27,15 @@ export function useAxios() {
     try {
       setLoading(true);
       const response = await axios.get("/api/items");
-      dispatch({type: "SET_DATA", data: response.data.items});
-      console.log(response);
+      console.log("Response data use", response.data.items);
+      const cartResponse = await axios.get("/api/cartLists");
+      const wishListResponse = await axios.get("/api/wishLists");
+      dispatch({
+        type: "SET_DATA",
+        data: response.data.items,
+        cart: cartResponse.data.cartLists,
+        wishList: wishListResponse.data.wishLists,
+      });
     } catch (error) {
       setError(error);
     } finally {
@@ -38,5 +45,5 @@ export function useAxios() {
   useEffect(() => {
     getData();
   }, []);
-  return {getData, loading, error};
+  return {loading, error};
 }
