@@ -41,7 +41,7 @@ function App() {
           <button onClick={()=>setRoute("productList")} style={{color:selectedTheme[theme].color}}> All Products</button>
           <button className="  flex row align-center sm " onClick={()=>setRoute("cart")} style={{color:selectedTheme[theme].color}}>
             <CartSvg style={{fill:selectedTheme[theme].color}}/>
-        {cart.reduce(((acc,curr)=>acc+curr.quantity),0)}
+        {cart.reduce(((acc,curr)=>acc+parseInt(curr.quantity)),0)}
         </button>
         <button className=" flex row align-center sm bg-transparent" onClick={()=>setRoute("wishList")} style={{color:selectedTheme[theme].color}}>
           <WishlistSvg style={{fill:selectedTheme[theme].color}}/>

@@ -27,7 +27,7 @@ export function CartProvider({children}) {
         }
         break;
 
-      case "CART":
+      case "ADD_TO_CART":
         try {
           setShowToast(true);
           setTextToast("saving to cart...");
@@ -35,6 +35,17 @@ export function CartProvider({children}) {
             id: item.id,
             ...item,
           });
+          const updateProducts = await axios.patch(`api/items/${item.id}`, {
+            ...item,
+            inCart: true,
+          });
+          dispatch({
+            type: "UPDATE_PRODUCTS",
+            item: {...updateProducts.data.item, id: item.id},
+          });
+          console.log("while addding itm quantity", item.quantity);
+          dispatch({type, item: {...responseCart.data.cartList, id: item.id}});
+          console.log("Add to cart response", responseCart.data);
           console.log("responseCart", responseCart.data);
         } catch (error) {
           setTextToast("error in Cart");
@@ -42,19 +53,42 @@ export function CartProvider({children}) {
           setTextToast("saved successfully");
         }
         break;
-      case "MODIFY_CART":
+      case "INCREMENT_QUANTITY":
         try {
           setShowToast(true);
           setTextToast("saving to cart...");
           console.log("item quant", item.quantity);
-
-          const IncrementCartResponse = await axios.patch(
+          console.log("increment received item", item);
+          console.log("inc", item.id);
+          const incrementCartResponse = await axios.patch(
             `/api/cartLists/${item.id}`,
             {
               ...item,
             }
           );
-          console.log("increment cart response", IncrementCartResponse.data);
+          console.log("increment cart response", incrementCartResponse.data);
+          dispatch({type, item: incrementCartResponse.data.cartList});
+
+          setTextToast("saved successfully");
+        } catch (error) {
+          setTextToast("error in increment cart");
+        } finally {
+        }
+        break;
+      case "DECREMENT_QUANTITY":
+        try {
+          setShowToast(true);
+          setTextToast("saving to cart...");
+          console.log("item quant", item.quantity);
+
+          const decrementCartResponse = await axios.patch(
+            `/api/cartLists/${item.id}`,
+            {
+              ...item,
+            }
+          );
+          console.log("increment cart response", decrementCartResponse.data);
+          dispatch({type, item: decrementCartResponse.data.cartList});
         } catch (error) {
           setTextToast("error in modify cart");
         } finally {
@@ -70,9 +104,19 @@ export function CartProvider({children}) {
           const deleteRequestCart = await axios.delete(
             `/api/cartLists/${item.id}`
           );
-          console.log("deleteRwquestCart", deleteRequestCart.status);
-          const gettingNewCartLists = await axios.get("/api/cartLists");
-          console.log("getting new cartlist", gettingNewCartLists.data);
+          const updateProducts = await axios.patch(`/api/items/${item.id}`, {
+            ...item,
+            inCart: false,
+          });
+          dispatch({
+            type: "UPDATE_PRODUCTS",
+            item: {...updateProducts.data.item, id: item.id},
+          });
+          if (deleteRequestCart.status === 204) {
+            dispatch({type, item});
+          } else {
+            console.log("error while deleting");
+          }
         } catch (error) {
           setTextToast("error in delete from cart");
         } finally {
@@ -93,6 +137,7 @@ export function CartProvider({children}) {
         return item;
     }
   };
+
   function reducer(state, action) {
     switch (action.type) {
       case "SET_DATA":
@@ -103,81 +148,37 @@ export function CartProvider({children}) {
           cart: [...action.cart],
           wishlist: [...action.wishList],
         };
-      case "ADD_TO_CART":
-        postDataToServer({type: "CART", item: action.item});
+      case "UPDATE_PRODUCTS":
         return {
           ...state,
-          cart: [action.item, ...state.cart],
           data: state.data.map((prev) =>
-            prev.id === action.item.id ? {...prev, inCart: true} : prev
+            prev.id === action.item.id ? action.item : prev
           ),
         };
-      case "INCREMENT_QUANTITY":
-        postDataToServer({
-          type: "MODIFY_CART",
-          item: {
-            ...action.item,
-            quantity:
-              state.cart.filter((prev) => prev.id === action.item.id)[0][
-                "quantity"
-              ] + 1,
-          },
-        });
-        return {
-          ...state,
-          cart: state.cart.map((prev) =>
-            prev.id === action.item.id
-              ? {...prev, quantity: prev.quantity + 1}
-              : prev
-          ),
-        };
-      case "DECREMENT_QUANTITY":
-        if (action.item.quantity > 1) {
-          postDataToServer({
-            type: "MODIFY_CART",
-            item: {
-              ...action.item,
-              quantity:
-                state.cart.filter((prev) => prev.id === action.item.id)[0][
-                  "quantity"
-                ] - 1,
-            },
-          });
-          return {
-            ...state,
-            cart: state.cart.map((prev) =>
-              prev.id === action.item.id
-                ? {...prev, quantity: prev.quantity - 1}
-                : prev
-            ),
-          };
-        }
-        postDataToServer({type: "DELETE_FROM_CART", item: {...action.item}});
-
+      case "DELETE_FROM_CART":
         return {
           ...state,
           cart: state.cart.filter((prev) => prev.id !== action.item.id),
-          data: state.data.map((prev) =>
-            prev.id === action.item.id ? {...prev, inCart: false} : prev
+        };
+      case "ADD_TO_CART":
+        return {
+          ...state,
+          cart: [action.item, ...state.cart],
+        };
+      case "INCREMENT_QUANTITY":
+        return {
+          ...state,
+          cart: state.cart.map((prev) =>
+            prev.id === action.item.id ? action.item : prev
           ),
         };
-      // return action.item.quantity > 1
-      //   ? {
-
-      //       ...state,
-      //       cart: state.cart.map((prev) =>
-      //         prev.id === action.item.id
-      //           ? {...prev, quantity: prev.quantity - 1}
-      //           : prev
-      //       ),
-      //     }
-      //   : {
-      //       ...state,
-      //       cart: state.cart.filter((prev) => prev.id !== action.item.id),
-      //       data: state.data.map((prev) =>
-      //         prev.id === action.item.id ? {...prev, inCart: false} : prev
-      //       ),
-      //     };
+      case "DECREMENT_QUANTITY":
+        return {
+          ...state,
+          cart: state.cart.map((prev) =>
+            prev.id === action.item.id ? action.item : prev
+          ),
+        };
       case "SORT_LOW_TO_HIGH":
         return {...state, sortBy: "SORT_LOW_TO_HIGH"};
       case "SORT_HIGH_TO_LOW":
@@ -230,7 +231,14 @@ export function CartProvider({children}) {
 
   return (
     <CartContext.Provider
-      value={{value, dispatch, showToast, textToast, setShowToast}}
+      value={{
+        value,
+        dispatch,
+        showToast,
+        textToast,
+        setShowToast,
+        postDataToServer,
+      }}
     >
       {children}
     </CartContext.Provider>

@@ -15,7 +15,7 @@ export default function setupMockServer() {
 
     routes() {
       this.namespace = "api";
-      this.timing = 1000;
+      this.timing = 700;
       this.resource("items");
       this.patch("/items/:id", (schema, request) => {
         let newAttrs = JSON.parse(request.requestBody);
@@ -44,7 +44,7 @@ export default function setupMockServer() {
       this.patch("/cartLists/:id", (schema, request) => {
         let newAttrs = JSON.parse(request.requestBody);
         let id = request.params.id;
-        let item = schema.items.find(id);
+        let item = schema.cartLists.find(id);
         return item.update(newAttrs);
       });
     },

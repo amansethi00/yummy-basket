@@ -6,6 +6,7 @@ export function ProductListCard({product}) {
   const {
     dispatch,
     value: {cart},
+    postDataToServer,
   } = useCart();
 
   return (
@@ -72,7 +73,10 @@ export function ProductListCard({product}) {
             className="btn-primary-sm "
             style={{width: "100%", alignSelf: "baseline"}}
             onClick={() =>
-              dispatch({type: "ADD_TO_CART", item: {...product, quantity: 1}})
+              postDataToServer({
+                type: "ADD_TO_CART",
+                item: {...product, quantity: 1},
+              })
             }
             disabled={product.inStock === false}
           >
