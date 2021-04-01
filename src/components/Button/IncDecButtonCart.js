@@ -10,22 +10,20 @@ export function IncDecButton({cart, product, dispatch}) {
   };
   console.log(cart);
   const decreaseButtonHandler = (product) => {
-    if (getCartItemQuantity(product) > 1) {
+    if (product.quantity > 1) {
       postDataToServer({
         type: "DECREMENT_QUANTITY",
         item: {
-          productId: product.id,
-          ...getCartItem(product.id),
-          quantity: parseInt(getCartItem(product.id).quantity) - 1,
+          ...product,
+          quantity: parseInt(product.quantity) - 1,
         },
       });
     } else {
       postDataToServer({
         type: "DELETE_FROM_CART",
         item: {
-          productId: product.id,
-          ...getCartItem(product.id),
-          quantity: parseInt(getCartItem(product.id).quantity) - 1,
+          ...product,
+          quantity: parseInt(product.quantity) - 1,
         },
       });
     }
@@ -34,9 +32,8 @@ export function IncDecButton({cart, product, dispatch}) {
     postDataToServer({
       type: "INCREMENT_QUANTITY",
       item: {
-        productId: product.id,
-        ...getCartItem(product.id),
-        quantity: parseInt(getCartItem(product.id).quantity) + 1,
+        ...product,
+        quantity: parseInt(product.quantity) + 1,
       },
     });
   };
@@ -49,7 +46,10 @@ export function IncDecButton({cart, product, dispatch}) {
         -
       </button>
       <div className="">
-        {cart.filter((prev) => prev.productId === product.id)[0].quantity}
+        {
+          cart.filter((prev) => prev.productId === product.productId)[0]
+            .quantity
+        }
       </div>
       <button
         className="btn-primary lg"

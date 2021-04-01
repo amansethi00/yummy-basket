@@ -2,7 +2,7 @@ import {useCart} from "../../context/cart-context";
 import {IncDecButton} from "../Button/IncDecButton";
 import {ReactComponent as WishlistSvg} from "../../asssets/wishlist.svg";
 import {ReactComponent as WishlistedSvg} from "../../asssets/heart.svg";
-export function ProductListCard({product}) {
+export function WishListCard({product}) {
   const {
     dispatch,
     value: {cart, wishlist},
@@ -15,14 +15,19 @@ export function ProductListCard({product}) {
   const deleteFromWishList = (product) => {
     postDataToServer({
       type: "DELETE_FROM_WISHLIST",
-      item: wishlistItem(product),
+      item: product,
     });
   };
   const addToWishList = (product) => {
     postDataToServer({
       type: "ADD_TO_WISHLIST",
-      item: {...product, productId: product.id},
+      item: {...product},
     });
+  };
+  const isWishListed = (product) => {
+    return (
+      wishlist.filter((prev) => prev.productId === product.productId).length > 0
+    );
   };
   return (
     <div
@@ -42,7 +47,7 @@ export function ProductListCard({product}) {
         className="outline-none"
         style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
       >
-        {product.inWishlist === true ? (
+        {isWishListed(product) === true ? (
           <button
             className="outline-none"
             onClick={() => deleteFromWishList(product)}
@@ -74,7 +79,7 @@ export function ProductListCard({product}) {
           Qty:1kg
           <div>{product.fastDelivery && <>Fast Delivery Available</>}</div>
         </div>
-        {cart.filter((prev) => prev.productId === product.id).length > 0 ? (
+        {/* {cart.filter((prev) => prev.productId === product.id).length > 0 ? (
           <IncDecButton product={product} dispatch={dispatch} cart={cart} />
         ) : (
           <button
@@ -83,14 +88,18 @@ export function ProductListCard({product}) {
             onClick={() =>
               postDataToServer({
                 type: "ADD_TO_CART",
-                item: {...product, quantity: 1, productId: product.id},
+                item: {
+                  ...product,
+                  quantity: 1,
+                  inCart: true,
+                },
               })
             }
             disabled={product.inStock === false}
           >
             ADD TO CART
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );

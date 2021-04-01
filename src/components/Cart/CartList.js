@@ -1,5 +1,5 @@
 import {useCart} from "../../context/cart-context";
-import {IncDecButton} from "../Button/IncDecButton";
+import {IncDecButton} from "../Button/IncDecButtonCart";
 import "./Cart.css";
 export function CartList() {
   const {

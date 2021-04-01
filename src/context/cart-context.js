@@ -6,33 +6,11 @@ export function CartProvider({children}) {
   const [textToast, setTextToast] = useState("");
   const postDataToServer = async ({type, item}) => {
     switch (type) {
-      case "WISHLIST":
-        try {
-          setShowToast(true);
-          setTextToast("saving to wishlist...");
-          const response = await axios.patch(`/api/items/${item.id}`, {
-            id: item.id,
-            ...item,
-            inWishlist: true,
-          });
-          console.log("wishlist response", response.data);
-          const wishListResponse = await axios.post("/api/wishLists", {
-            ...item,
-          });
-          console.log("wishList Response", wishListResponse.data);
-        } catch (error) {
-          setTextToast(error);
-        } finally {
-          setTextToast("saved successfully");
-        }
-        break;
-
       case "ADD_TO_CART":
         try {
           setShowToast(true);
           setTextToast("saving to cart...");
           const responseCart = await axios.post("/api/cartLists", {
-            id: item.id,
             ...item,
           });
           const updateProducts = await axios.patch(`api/items/${item.id}`, {
@@ -41,16 +19,13 @@ export function CartProvider({children}) {
           });
           dispatch({
             type: "UPDATE_PRODUCTS",
-            item: {...updateProducts.data.item, id: item.id},
+            item: {...updateProducts.data.item, id: item.productId},
           });
           console.log("while addding itm quantity", item.quantity);
-          dispatch({type, item: {...responseCart.data.cartList, id: item.id}});
-          console.log("Add to cart response", responseCart.data);
-          console.log("responseCart", responseCart.data);
+          dispatch({type, item: {...responseCart.data.cartList}});
+          setTextToast("saved successfully");
         } catch (error) {
           setTextToast("error in Cart");
-        } finally {
-          setTextToast("saved successfully");
         }
         break;
       case "INCREMENT_QUANTITY":
@@ -104,13 +79,16 @@ export function CartProvider({children}) {
           const deleteRequestCart = await axios.delete(
             `/api/cartLists/${item.id}`
           );
-          const updateProducts = await axios.patch(`/api/items/${item.id}`, {
-            ...item,
-            inCart: false,
-          });
+          const updateProducts = await axios.patch(
+            `/api/items/${item.productId}`,
+            {
+              ...item,
+              inCart: false,
+            }
+          );
           dispatch({
             type: "UPDATE_PRODUCTS",
-            item: {...updateProducts.data.item, id: item.id},
+            item: {...updateProducts.data.item},
           });
           if (deleteRequestCart.status === 204) {
             dispatch({type, item});
@@ -123,14 +101,62 @@ export function CartProvider({children}) {
           setTextToast("deleted successfully");
         }
         break;
+      case "ADD_TO_WISHLIST":
+        try {
+          setShowToast(true);
+          setTextToast("saving to wishlist...");
+          const wishListResponse = await axios.post("/api/wishLists", {
+            ...item,
+          });
+          if (wishListResponse.status === 201) {
+            const response = await axios.patch(`/api/items/${item.productId}`, {
+              ...item,
+              inWishlist: true,
+            });
+            dispatch({type, item: wishListResponse.data.wishList});
+            dispatch({
+              type: "UPDATE_PRODUCTS",
+              item: {...item, inWishlist: true},
+            });
+            console.log("item response wishlisted", response.data.item);
+          }
+
+          console.log("wishList Response", wishListResponse.status);
+        } catch (error) {
+          setTextToast(error);
+        } finally {
+          setTextToast("saved successfully");
+        }
+        break;
+
       case "DELETE_FROM_WISHLIST":
         try {
-          const deleteRequestWishlist = await axios.delete(
-            `/api/wishLists/${item.id}`
+          setShowToast(true);
+          setTextToast("deleting from wishlist...");
+          const wishListResponse = await axios.delete(
+            `/api/wishLists/${item.id}`,
+            {
+              ...item,
+            }
           );
-          console.log("deleteRequestWishList", deleteRequestWishlist.status);
+          if (wishListResponse.status === 204) {
+            const response = await axios.patch(`/api/items/${item.productId}`, {
+              ...item,
+              inWishlist: false,
+            });
+            dispatch({type, item});
+            dispatch({
+              type: "UPDATE_PRODUCTS",
+              item: {...item, inWishlist: false},
+            });
+            console.log("item response wishlisted", response.data.item);
+          }
+
+          console.log("wishList Response", wishListResponse.status);
         } catch (error) {
-          console.log(error);
+          setTextToast(error);
+        } finally {
+          setTextToast("saved successfully");
         }
         break;
       default:
@@ -152,7 +178,7 @@ export function CartProvider({children}) {
         return {
           ...state,
           data: state.data.map((prev) =>
-            prev.id === action.item.id ? action.item : prev
+            prev.id === action.item.productId ? action.item : prev
           ),
         };
       case "DELETE_FROM_CART":
@@ -188,25 +214,16 @@ export function CartProvider({children}) {
       case "TOGGLE_FAST_DELIVERY":
         return {...state, fastDelivery: !state.fastDelivery};
       case "ADD_TO_WISHLIST":
-        postDataToServer({
-          type: "WISHLIST",
-          item: action.item,
-        });
         return {
           ...state,
-          data: state.data.map((prev) =>
-            prev.id === action.item.id ? {...prev, inWishlist: true} : prev
-          ),
           wishlist: state.wishlist.concat(action.item),
         };
-      case "REMOVE_FROM_WISHLIST":
-        postDataToServer({type: "DELETE_FROM_WISHLIST", item: action.item});
+      case "DELETE_FROM_WISHLIST":
         return {
           ...state,
-          data: state.data.map((prev) =>
-            prev.id === action.item.id ? {...prev, inWishlist: false} : prev
+          wishlist: state.wishlist.filter(
+            (prev) => prev.productId !== action.item.productId
           ),
-          wishlist: state.wishlist.filter((prev) => prev.id !== action.item.id),
         };
       case "RESET":
         return {

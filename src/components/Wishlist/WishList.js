@@ -1,5 +1,5 @@
 import {useCart} from "../../context/cart-context";
-import {ProductListCard} from "../Product/ProductListCard";
+import {WishListCard} from "./WishListCard";
 export function WishList() {
   const {
     value: {wishlist},
@@ -10,7 +10,7 @@ export function WishList() {
       <h2>WishList</h2>
       <div className="flex row card card-body justify-content-center">
         {wishlist.map((product) => {
-          return <ProductListCard product={product} dispatch={dispatch} />;
+          return <WishListCard product={product} dispatch={dispatch} />;
         })}
       </div>
     </div>

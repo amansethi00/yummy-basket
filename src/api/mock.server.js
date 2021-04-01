@@ -23,18 +23,22 @@ export default function setupMockServer() {
         let item = schema.items.find(id);
         return item.update(newAttrs);
       });
+
       this.resource("wishLists");
       this.post("/wishLists", (schema, request) => {
         let attrs = JSON.parse(request.requestBody);
+        attrs.id = faker.random.uuid();
         return schema.wishLists.create(attrs);
       });
       this.delete("/wishLists/:id", (schema, request) => {
         let id = request.params.id;
         return schema.wishLists.find(id).destroy();
       });
+
       this.resource("cartLists");
       this.post("/cartLists", (schema, request) => {
         let attrs = JSON.parse(request.requestBody);
+        attrs.id = faker.random.uuid();
         return schema.cartLists.create(attrs);
       });
       this.delete("/cartLists/:id", (schema, request) => {
@@ -45,6 +49,7 @@ export default function setupMockServer() {
         let newAttrs = JSON.parse(request.requestBody);
         let id = request.params.id;
         let item = schema.cartLists.find(id);
+
         return item.update(newAttrs);
       });
     },
