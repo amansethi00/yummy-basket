@@ -83,7 +83,12 @@ export function ProductListCard({product}) {
             onClick={() =>
               postDataToServer({
                 type: "ADD_TO_CART",
-                item: {...product, quantity: 1, productId: product.id},
+                item: {
+                  ...product,
+                  quantity: 1,
+                  productId: product.id,
+                  inCart: true,
+                },
               })
             }
             disabled={product.inStock === false}
