@@ -9,7 +9,12 @@
   width: 30%;
   margin: auto;
 }
-
+* {
+  --primary-color: #e96125;
+  --secondary-color: #e96125;
+  --primary-color-hover: #e96125;
+  --secondary-color-hover: #e96125;
+}
 .slider {
   -webkit-appearance: none;
   width: 100%;

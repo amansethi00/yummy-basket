@@ -19,13 +19,14 @@ export function CartProvider({children}) {
           });
           dispatch({
             type: "UPDATE_PRODUCTS",
-            item: {...updateProducts.data.item, id: item.productId},
+            item: {...item, id: item.productId, inCart: true},
           });
           console.log("while addding itm quantity", item.quantity);
           dispatch({type, item: {...responseCart.data.cartList}});
           setTextToast("saved successfully");
         } catch (error) {
-          setTextToast("error in Cart");
+          console.log("Error in add to cart", error);
+          setTextToast("error in Cart", error);
         }
         break;
       case "INCREMENT_QUANTITY":
@@ -46,6 +47,7 @@ export function CartProvider({children}) {
 
           setTextToast("saved successfully");
         } catch (error) {
+          console.log("error in inc", error);
           setTextToast("error in increment cart");
         } finally {
         }
@@ -88,7 +90,11 @@ export function CartProvider({children}) {
           );
           dispatch({
             type: "UPDATE_PRODUCTS",
-            item: {...updateProducts.data.item},
+            item: {
+              ...item,
+              id: item.productId,
+              inCart: false,
+            },
           });
           if (deleteRequestCart.status === 204) {
             dispatch({type, item});
@@ -116,7 +122,7 @@ export function CartProvider({children}) {
             dispatch({type, item: wishListResponse.data.wishList});
             dispatch({
               type: "UPDATE_PRODUCTS",
-              item: {...item, inWishlist: true},
+              item: {...item, id: item.productId, inWishlist: true},
             });
             console.log("item response wishlisted", response.data.item);
           }
@@ -147,7 +153,7 @@ export function CartProvider({children}) {
             dispatch({type, item});
             dispatch({
               type: "UPDATE_PRODUCTS",
-              item: {...item, inWishlist: false},
+              item: {...item, id: item.productId, inWishlist: false},
             });
             console.log("item response wishlisted", response.data.item);
           }
@@ -178,7 +184,7 @@ export function CartProvider({children}) {
         return {
           ...state,
           data: state.data.map((prev) =>
-            prev.id === action.item.productId ? action.item : prev
+            prev.id === action.item.productId ? {...action.item} : prev
           ),
         };
       case "DELETE_FROM_CART":

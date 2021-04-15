@@ -1,15 +1,17 @@
 import './App.css';
 import {ProductList} from "./components/Product/ProductList";
+import {ProductPage}from "./components/Product/ProductPage";
 import {WishList} from "./components/Wishlist/WishList";
 import {CartList} from "./components/Cart/CartList";
+import {Address} from "./components/Address/Address";
 import { useTheme } from "./context/theme-context";
 import {useCart} from "./context/cart-context";
-import { useState } from 'react';
 import {useAxios} from "./useAxios";
 import {ReactComponent as DarkTheme} from "./asssets/dark-theme-white.svg";
 import {ReactComponent as LightTheme} from "./asssets/dark-theme.svg";
 import {ReactComponent as CartSvg} from "./asssets/cart.svg";
 import {ReactComponent as WishlistSvg} from "./asssets/wishlist.svg";
+import {Routes,Route,Link} from "react-router-dom";
 const selectedTheme={
   "light":{
     bg:"white",
@@ -23,7 +25,6 @@ const selectedTheme={
 function App() {
   const {theme,toggleTheme} = useTheme();
   const {value:{cart,wishlist},showToast,setShowToast,textToast}=useCart();
-  const [route,setRoute]= useState("productList");
   const {loading,error}=useAxios();
   console.log(textToast);
   if(showToast===true){
@@ -38,19 +39,18 @@ function App() {
           <div className="md">YummyBasket</div>
         </div>
         <div className="nav-right flex row align-center">
-          <button onClick={()=>setRoute("productList")} style={{color:selectedTheme[theme].color}}> All Products</button>
-          <button className="  flex row align-center sm " onClick={()=>setRoute("cart")} style={{color:selectedTheme[theme].color}}>
+          <Link to="/" style={{color:selectedTheme[theme].color,textDecoration:"none"}}> All Products</Link>
+          <Link to="/cart" className="  flex row align-center sm " style={{color:selectedTheme[theme].color,textDecoration:"none"}}>
             <CartSvg style={{fill:selectedTheme[theme].color}}/>
         {cart.reduce(((acc,curr)=>acc+parseInt(curr.quantity)),0)}
-        </button>
-        <button className=" flex row align-center sm bg-transparent" onClick={()=>setRoute("wishList")} style={{color:selectedTheme[theme].color}}>
+        </Link>
+        <Link to="/wishlist" className=" flex row align-center sm bg-transparent"  style={{color:selectedTheme[theme].color,textDecoration:"none"}}>
           <WishlistSvg style={{fill:selectedTheme[theme].color}}/>
           {wishlist.length}
-        </button>
+        </Link>
         <button onClick={toggleTheme}>{theme==="light"?<DarkTheme/>:<LightTheme/>}</button>
         </div>
       </nav>
-      {route==="productList"?<ProductList/>:route==="cart"?<CartList/>:<WishList/>}
 
       <div className="text-center">
         {loading && <h3>Loading data from server...</h3>}
@@ -60,6 +60,13 @@ function App() {
         {textToast}
         <button class="outline-none">X </button>       
          </div>}
+         <Routes>
+           <Route path={"/"} element={<ProductList/>}/>
+           <Route path={"/cart"} element={<CartList/>}/>
+           <Route path={"/wishlist"} element={<WishList/>}/>
+           <Route path={"/products/:productId"} element={<ProductPage/>}/>
+           <Route path={"/checkout/address"} element={<Address/>}/>
+         </Routes>
     </div>
   )
 }

@@ -40,7 +40,12 @@ export function CartList() {
         })}
       </ul>
       <div className="bold">
-        TOTAL: ₹{cart.reduce((a, b) => a + b["price"] * b["quantity"], 0)}
+        <span>
+          {" "}
+          TOTAL: ₹{cart.reduce((a, b) => a + b["price"] * b["quantity"], 0)}
+        </span>
+        <br />
+        <button className="btn btn-primary-md">Checkout</button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {ProductListForm} from "./ProductListForm";
 import {ProductData} from "./ProductData";
+
 export function ProductList() {
   const [sliderValue, setSliderValue] = useState(500);
 
