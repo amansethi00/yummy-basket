@@ -6,35 +6,42 @@ export function CartList() {
     value: {cart},
     dispatch,
   } = useCart();
+  console.log(cart);
+  const filteredCart = cart.filter((item) => item.productId);
+  console.log({filteredCart});
   return (
     <div className=" flex col justify-content-center align-items-center">
       <h2> My Cart</h2>
       <ul class="list-group">
-        {cart.map((item) => {
+        {filteredCart.map((item) => {
           return (
             <div className="cart-item  flex row justify-content-space-between align-items-center">
               <div className="pd-bottom-1 flex row">
                 <img
-                  src={item.image}
+                  src={item?.productId?.image}
                   className="card-image"
                   style={{width: "5rem", height: "100%"}}
                   alt="product-img"
                 ></img>
                 <div className="pd-left-half flex col  justify-content-space-between">
-                  <div className="">{item.name}</div>
+                  <div className="">{item?.productId?.name}</div>
                   <div className="row flex align-items-center ">
                     <div style={{width: "5rem"}}>
                       <IncDecButton
                         cart={cart}
-                        product={item}
+                        product={item.productId}
                         dispatch={dispatch}
                       />
                     </div>
-                    <span className="sm pd-left-1">x ₹{item.price}</span>
+                    <span className="sm pd-left-1">
+                      x ₹{item?.productId?.price}
+                    </span>
                   </div>
                 </div>
               </div>
-              <span className="bold">₹{item.price * item.quantity}</span>
+              <span className="bold">
+                ₹{item?.productId?.price * item.quantity}
+              </span>
             </div>
           );
         })}
@@ -42,7 +49,13 @@ export function CartList() {
       <div className="bold">
         <span>
           {" "}
-          TOTAL: ₹{cart.reduce((a, b) => a + b["price"] * b["quantity"], 0)}
+          TOTAL: ₹
+          {filteredCart.reduce(
+            (a, b) =>
+              parseInt(a) +
+              parseInt(b?.productId?.["price"]) * parseInt(b?.["quantity"]),
+            0
+          )}
         </span>
         <br />
         <button className="btn btn-primary-md">Checkout</button>

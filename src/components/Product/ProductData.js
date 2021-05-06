@@ -23,7 +23,9 @@ export function ProductData({sliderValue}) {
     }
   };
   const rangedData = (prodArray, sliderValue) => {
-    return prodArray.filter(({price}) => parseInt(price) < sliderValue);
+    return prodArray.filter(
+      ({price}) => parseInt(price) < parseInt(sliderValue)
+    );
   };
   const filteredData = (prodArray, fastDelivery, includeOutOfStock) => {
     const fastDeliveryFilter =

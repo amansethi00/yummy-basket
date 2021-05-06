@@ -16,18 +16,18 @@ export function ProductListCard({product}) {
   const wishlistItem = (product) => {
     return wishlist.filter((prev) => prev.productId === product.id)[0];
   };
-  const deleteFromWishList = async (product, wishlistInstanceId) => {
+  const deleteFromWishList = async (product) => {
     try {
       const response = await axios.delete(
         "https://ecom.amansethi00.repl.co/wishlist",
-        {productId: product._id, id: wishlistInstanceId},
         {
           headers: {
             Authorization: `${localStorage.getItem(
               "username"
             )}:${localStorage.getItem("password")}`,
           },
-        }
+        },
+        {productId: product._id}
       );
       if (response.data.success) {
         dispatch({
@@ -88,16 +88,16 @@ export function ProductListCard({product}) {
     }
   };
   useEffect(() => {
-    setItemQuantity(cart.find((prev) => prev.productId === product._id));
+    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id));
   }, [cart]);
   const [itemQuantity, setItemQuantity] = useState(undefined);
-  console.log(
-    "item qunatiyt",
-    itemQuantity,
-    cart.find((prev) => prev.productId === product._id),
-    cart
-  );
-
+  // console.log(
+  //   "item qunatiyt",
+  //   itemQuantity,
+  //   cart.find((prev) => prev.productId._id === product._id),
+  //   cart
+  // );
+  console.log({wishlist});
   return (
     <div
       className="card card-shadow-1 mg-1 relative"
@@ -118,15 +118,11 @@ export function ProductListCard({product}) {
             className="outline-none"
             style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
           >
-            {wishlist.filter((prev) => prev == product._id).length > 0 ? (
+            {wishlist.filter((prev) => prev?._id === product?._id).length >
+            0 ? (
               <button
                 className="outline-none"
-                onClick={() =>
-                  deleteFromWishList(
-                    product,
-                    wishlist.filter((prev) => prev == product._id)[0]._id
-                  )
-                }
+                onClick={() => deleteFromWishList(product)}
               >
                 <WishlistedSvg />
               </button>

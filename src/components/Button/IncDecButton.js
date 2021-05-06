@@ -6,7 +6,7 @@ export function IncDecButton({product}) {
     dispatch,
   } = useCart();
   const getCartItem = (id) => {
-    return cart.filter((prev) => prev.productId === id)[0];
+    return cart.filter((prev) => prev.productId._id === id)[0];
   };
   const getCartItemQuantity = (product) => {
     return getCartItem(product.id).quantity;
@@ -20,7 +20,8 @@ export function IncDecButton({product}) {
         {
           productId: _id,
           quantity,
-          id: cart.filter((prev) => prev.productId === product._id)[0]._id,
+          id: cart.filter((prev) => prev?.productId?._id === product._id)[0]
+            ._id,
         },
         {
           headers: {
@@ -53,23 +54,28 @@ export function IncDecButton({product}) {
         onClick={() =>
           updateButton(
             product,
-            cart.filter((prev) => prev.productId === product._id)[0].quantity -
-              1
+            cart.filter((prev) => prev?.productId?._id === product._id)[0]
+              .quantity - 1
           )
         }
       >
         -
       </button>
       <div className="">
-        {cart.filter((prev) => prev.productId === product._id)[0]?.quantity}
+        {
+          cart.filter((prev) => prev?.productId?._id === product._id)[0]
+            ?.quantity
+        }
       </div>
       <button
         className="btn-primary lg"
         onClick={() =>
           updateButton(
             product,
-            cart.filter((prev) => prev.productId === product._id)[0].quantity +
-              1
+            parseInt(
+              cart.filter((prev) => prev?.productId?._id === product._id)[0]
+                .quantity
+            ) + 1
           )
         }
       >
