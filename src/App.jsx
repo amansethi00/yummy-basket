@@ -4,6 +4,9 @@ import {ProductPage}from "./components/Product/ProductPage";
 import {WishList} from "./components/Wishlist/WishList";
 import {CartList} from "./components/Cart/CartList";
 import {Address} from "./components/Address/Address";
+import {Home} from "./components/Home/Home";
+import {Login} from "./components/Home/Login";
+import {Signup} from "./components/Home/Signup";
 import { useTheme } from "./context/theme-context";
 import {useCart} from "./context/cart-context";
 import {useAxios} from "./useAxios";
@@ -12,6 +15,9 @@ import {ReactComponent as LightTheme} from "./asssets/dark-theme.svg";
 import {ReactComponent as CartSvg} from "./asssets/cart.svg";
 import {ReactComponent as WishlistSvg} from "./asssets/wishlist.svg";
 import {Routes,Route,Link} from "react-router-dom";
+import {PrivateRoute} from "./PrivateRoute";
+import { useEffect, useState } from 'react';
+import {ReactComponent as TruckLogo} from './asssets/truck.svg';
 const selectedTheme={
   "light":{
     bg:"white",
@@ -25,7 +31,12 @@ const selectedTheme={
 function App() {
   const {theme,toggleTheme} = useTheme();
   const {value:{cart,wishlist},showToast,setShowToast,textToast}=useCart();
-  const {loading,error}=useAxios();
+  const [cartItemsCount,setCartItemsCount]= useState(0);
+  useEffect(()=>{
+    setCartItemsCount(cart.reduce(((acc,curr)=>acc+parseInt(curr.quantity)),0));
+  },[cart])
+  console.log({cartItemsCount});
+  const {loading,error}="";
   console.log(textToast);
   if(showToast===true){
     setTimeout(() => {
@@ -36,13 +47,13 @@ function App() {
     <div style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color,minHeight:"100vh"}}>
       <nav className="nav" style={{backgroundColor:selectedTheme[theme].bg,color:selectedTheme[theme].color}} >
         <div className="nav-left">
-          <div className="md">YummyBasket</div>
+          <div className="md">🚚Mini Basket</div>
         </div>
         <div className="nav-right flex row align-center">
-          <Link to="/" style={{color:selectedTheme[theme].color,textDecoration:"none"}}> All Products</Link>
+          <Link to="/products" style={{color:selectedTheme[theme].color,textDecoration:"none"}}> All Products</Link>
           <Link to="/cart" className="  flex row align-center sm " style={{color:selectedTheme[theme].color,textDecoration:"none"}}>
             <CartSvg style={{fill:selectedTheme[theme].color}}/>
-        {cart.reduce(((acc,curr)=>acc+parseInt(curr.quantity)),0)}
+        {cartItemsCount}
         </Link>
         <Link to="/wishlist" className=" flex row align-center sm bg-transparent"  style={{color:selectedTheme[theme].color,textDecoration:"none"}}>
           <WishlistSvg style={{fill:selectedTheme[theme].color}}/>
@@ -61,11 +72,14 @@ function App() {
         <button class="outline-none">X </button>       
          </div>}
          <Routes>
-           <Route path={"/"} element={<ProductList/>}/>
-           <Route path={"/cart"} element={<CartList/>}/>
-           <Route path={"/wishlist"} element={<WishList/>}/>
+           <Route path={"/"} element={<Home/>}/>
+           <Route path={"/products"} element={<ProductList/>}/>
+           <PrivateRoute path={"/cart"} element={<CartList/>}/>
+           <PrivateRoute path={"/wishlist"} element={<WishList/>}/>
+           <Route path={"/login"} element={<Login/>}/>
+           <Route path={"/signup"} element={<Signup/>}/>
            <Route path={"/products/:productId"} element={<ProductPage/>}/>
-           <Route path={"/checkout/address"} element={<Address/>}/>
+           <PrivateRoute path={"/checkout/address"} element={<Address/>}/>
          </Routes>
     </div>
   )

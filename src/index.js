@@ -4,17 +4,19 @@ import "./index.css";
 import App from "./App";
 import {CartProvider} from "./context/cart-context";
 import {ThemeProvider} from "./context/theme-context";
-import setupMockServer from "./api/mock.server";
+import {AuthProvider} from "./context/auth-context";
 import {BrowserRouter as Router} from "react-router-dom";
-setupMockServer();
+// setupMockServer();
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <ThemeProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </ThemeProvider>
+      </AuthProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById("root")

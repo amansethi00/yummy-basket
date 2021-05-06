@@ -42,7 +42,6 @@ export function ProductPage() {
         {product.inStock === false && (
           <div class="card-text-overlay ">OUT OF STOCK</div>
         )}
-
         <button
           className="outline-none"
           style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}

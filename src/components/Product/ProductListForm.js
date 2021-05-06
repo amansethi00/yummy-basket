@@ -46,10 +46,10 @@ export function ProductListForm({sliderValue, setSliderValue}) {
         <input
           type="range"
           min="1"
-          max="1000"
+          max="2000"
           className="slider"
           id="myRange"
-          defaultValue="500"
+          defaultValue="1200"
           onChange={(event) => setSliderValue(event.target.value)}
         />
         <p>
@@ -58,7 +58,10 @@ export function ProductListForm({sliderValue, setSliderValue}) {
       </div>
       <input
         type="reset"
-        onClick={() => dispatch({type: "RESET"})}
+        onClick={() => {
+          setSliderValue(1200);
+          dispatch({type: "RESET"});
+        }}
         className="outline-none btn-secondary-sm mg-top-half"
       />
     </form>
