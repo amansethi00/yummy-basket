@@ -12,6 +12,7 @@ export function IncDecButton({product}) {
     return getCartItem(product.id).quantity;
   };
   const updateButton = async (product, quantity) => {
+    console.log({"quantity from update buttton": quantity});
     const {_id} = product;
     console.log(_id);
     try {
@@ -20,8 +21,7 @@ export function IncDecButton({product}) {
         {
           productId: _id,
           quantity,
-          id: cart.filter((prev) => prev?.productId?._id === product._id)[0]
-            ._id,
+          id: cart.find((prev) => prev?.productId?._id === product._id)._id,
         },
         {
           headers: {
@@ -54,8 +54,9 @@ export function IncDecButton({product}) {
         onClick={() =>
           updateButton(
             product,
-            cart.filter((prev) => prev?.productId?._id === product._id)[0]
-              .quantity - 1
+            parseInt(
+              cart.find((prev) => prev?.productId?._id === product._id).quantity
+            ) - 1
           )
         }
       >

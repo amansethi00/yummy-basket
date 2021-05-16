@@ -42,6 +42,7 @@ export function ProductList() {
         );
         console.log(response);
         if (response.data.success) {
+          console.log("cart console", response.data);
           console.log("Success");
           dispatch({
             type: "SET_CART",
