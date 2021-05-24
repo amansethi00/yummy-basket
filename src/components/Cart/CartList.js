@@ -1,5 +1,6 @@
 import {useCart} from "../../context/cart-context";
 import {IncDecButton} from "../Button/IncDecButton";
+import axios from "axios";
 import "./Cart.css";
 export function CartList() {
   const {
@@ -9,6 +10,7 @@ export function CartList() {
   console.log(cart);
   const filteredCart = cart.filter((item) => item.productId);
   console.log({filteredCart});
+
   return (
     <div className=" flex col justify-content-center align-items-center">
       <h2> My Cart</h2>

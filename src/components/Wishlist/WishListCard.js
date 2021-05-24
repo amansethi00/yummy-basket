@@ -1,34 +1,21 @@
 import {useCart} from "../../context/cart-context";
-import {IncDecButton} from "../Button/IncDecButton";
+import axios from "axios";
 import {ReactComponent as WishlistSvg} from "../../asssets/wishlist.svg";
 import {ReactComponent as WishlistedSvg} from "../../asssets/heart.svg";
+import {deleteFromWishList} from "../index";
+import {AddToCart, IncDecButton} from "../Button";
+import {useEffect, useState} from "react";
 export function WishListCard({product}) {
   const {
     dispatch,
     value: {cart, wishlist},
-    postDataToServer,
   } = useCart();
-  console.log("cart from pLc", cart);
-  const wishlistItem = (product) => {
-    return wishlist.filter((prev) => prev.productId === product.id)[0];
-  };
-  const deleteFromWishList = (product) => {
-    postDataToServer({
-      type: "DELETE_FROM_WISHLIST",
-      item: product,
-    });
-  };
-  const addToWishList = (product) => {
-    postDataToServer({
-      type: "ADD_TO_WISHLIST",
-      item: {...product},
-    });
-  };
-  const isWishListed = (product) => {
-    return (
-      wishlist.filter((prev) => prev.productId === product.productId).length > 0
-    );
-  };
+  const [itemQuantity, setItemQuantity] = useState(undefined);
+
+  useEffect(() => {
+    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id));
+  }, [cart]);
+
   return (
     <div
       className="card card-shadow-1 mg-1 relative"
@@ -47,19 +34,12 @@ export function WishListCard({product}) {
         className="outline-none"
         style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
       >
-        {isWishListed(product) === true ? (
-          <button
-            className="outline-none"
-            onClick={() => deleteFromWishList(product)}
-          >
-            <WishlistedSvg />
-          </button>
-        ) : (
-          <WishlistSvg
-            style={{fill: "white"}}
-            onClick={() => addToWishList(product)}
-          />
-        )}
+        <button
+          className="outline-none"
+          onClick={() => deleteFromWishList({product, wishlist, dispatch})}
+        >
+          <WishlistedSvg />
+        </button>
       </button>
 
       <div className="card-body text-left pd-quarter">
@@ -79,27 +59,11 @@ export function WishListCard({product}) {
           Qty:1kg
           <div>{product.fastDelivery && <>Fast Delivery Available</>}</div>
         </div>
-        {/* {cart.filter((prev) => prev.productId === product.id).length > 0 ? (
-          <IncDecButton product={product} dispatch={dispatch} cart={cart} />
+        {itemQuantity !== undefined ? (
+          <IncDecButton product={product} />
         ) : (
-          <button
-            className="btn-primary-sm "
-            style={{width: "100%", alignSelf: "baseline"}}
-            onClick={() =>
-              postDataToServer({
-                type: "ADD_TO_CART",
-                item: {
-                  ...product,
-                  quantity: 1,
-                  inCart: true,
-                },
-              })
-            }
-            disabled={product.inStock === false}
-          >
-            ADD TO CART
-          </button>
-        )} */}
+          <AddToCart product={product} />
+        )}
       </div>
     </div>
   );

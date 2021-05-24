@@ -7,97 +7,33 @@ import {Link} from "react-router-dom";
 import "./ProductListCard.css";
 import axios from "axios";
 import {useEffect, useState} from "react";
+import {addToWishList, deleteFromWishList} from "../index";
+import {AddToCart} from "../Button";
 export function ProductListCard({product}) {
   const {
     dispatch,
     value: {cart, wishlist},
   } = useCart();
-  console.log("cart from pLc", cart);
-  const wishlistItem = (product) => {
-    return wishlist.filter((prev) => prev.productId === product.id)[0];
-  };
-  const deleteFromWishList = async (product) => {
-    try {
-      const response = await axios.delete(
-        "https://ecom.amansethi00.repl.co/wishlist",
-        {
-          headers: {
-            Authorization: `${localStorage.getItem(
-              "username"
-            )}:${localStorage.getItem("password")}`,
-          },
-        },
-        {productId: product._id}
-      );
-      if (response.data.success) {
-        dispatch({
-          type: "SET_WISHLIST",
-          payload: response.data.updatedWishlist,
-        });
-      }
-    } catch (error) {}
-  };
-  const addToWishList = async (product) => {
-    try {
-      const response = await axios.post(
-        "https://ecom.amansethi00.repl.co/wishlist",
-        {productId: product._id},
-        {
-          headers: {
-            Authorization: `${localStorage.getItem(
-              "username"
-            )}:${localStorage.getItem("password")}`,
-          },
-        }
-      );
-      if (response.data.success) {
-        dispatch({
-          type: "SET_WISHLIST",
-          payload: response.data.updatedWishlist,
-        });
-      }
-    } catch (error) {}
-  };
-  const addToCart = async (product) => {
-    const {_id} = product;
-    console.log(_id);
-    try {
-      const response = await axios.post(
-        "https://ecom.amansethi00.repl.co/cart",
-        {productId: _id, quantity: 1},
-        {
-          headers: {
-            Authorization: `${localStorage.getItem(
-              "username"
-            )}:${localStorage.getItem("password")}`,
-          },
-        }
-      );
-      console.log(response);
-      if (response.data.success) {
-        console.log("Success");
-        dispatch({
-          type: "SET_CART",
-          payload: response.data.updatedCartInstancee,
-        });
-      } else {
-        console.log("Error");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [inWishlist, setInWishlist] = useState(false);
+  const [itemQuantity, setItemQuantity] = useState(undefined);
+
+  useEffect(() => {
+    console.log(
+      "in wishlist",
+      wishlist.find((prev) => prev?.productId._id === product?._id)
+        ? true
+        : false
+    );
+    setInWishlist(
+      wishlist.find((prev) => prev?.productId._id === product?._id)
+        ? true
+        : false
+    );
+  }, [wishlist]);
   useEffect(() => {
     setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id));
   }, [cart]);
-  const [itemQuantity, setItemQuantity] = useState(undefined);
-  // console.log(
-  //   "item qunatiyt",
-  //   itemQuantity,
-  //   cart.find((prev) => prev.productId._id === product._id),
-  //   cart
-  // );
-  console.log({wishlist});
+
   return (
     <div
       className="card card-shadow-1 mg-1 relative"
@@ -118,18 +54,19 @@ export function ProductListCard({product}) {
             className="outline-none"
             style={{position: "absolute", top: "0.5rem", right: "0.5rem"}}
           >
-            {wishlist.filter((prev) => prev?._id === product?._id).length >
-            0 ? (
+            {inWishlist ? (
               <button
                 className="outline-none"
-                onClick={() => deleteFromWishList(product)}
+                onClick={() =>
+                  deleteFromWishList({product, dispatch, wishlist})
+                }
               >
                 <WishlistedSvg />
               </button>
             ) : (
               <WishlistSvg
                 style={{fill: "white"}}
-                onClick={() => addToWishList(product)}
+                onClick={() => addToWishList({product, dispatch})}
               />
             )}
           </button>
@@ -160,14 +97,7 @@ export function ProductListCard({product}) {
       {itemQuantity !== undefined ? (
         <IncDecButton product={product} />
       ) : (
-        <button
-          className="btn-primary-sm "
-          style={{width: "100%", alignSelf: "baseline"}}
-          onClick={() => addToCart(product)}
-          disabled={product.inStock === false}
-        >
-          ADD TO CART
-        </button>
+        <AddToCart product={product} />
       )}
     </div>
   );

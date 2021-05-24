@@ -10,7 +10,9 @@ export function WishList() {
       <h2>WishList</h2>
       <div className="flex row card card-body justify-content-center">
         {wishlist.map((product) => {
-          return <WishListCard product={product} dispatch={dispatch} />;
+          return (
+            <WishListCard product={product.productId} dispatch={dispatch} />
+          );
         })}
       </div>
     </div>

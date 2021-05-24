@@ -28,7 +28,7 @@ export function ProductList() {
   }, []);
 
   useEffect(() => {
-    const anonFun = async () => {
+    const getAndSetCart = async () => {
       try {
         const response = await axios.get(
           "https://ecom.amansethi00.repl.co/cart",
@@ -55,10 +55,10 @@ export function ProductList() {
         console.log(error);
       }
     };
-    anonFun();
+    getAndSetCart();
   }, []);
   useEffect(() => {
-    const anonFun = async () => {
+    const getAndSetWishlist = async () => {
       try {
         const response = await axios.get(
           "https://ecom.amansethi00.repl.co/wishlist",
@@ -84,7 +84,7 @@ export function ProductList() {
         console.log(error);
       }
     };
-    anonFun();
+    getAndSetWishlist();
   }, []);
   return (
     <div className="text-center">
