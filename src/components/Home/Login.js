@@ -1,13 +1,14 @@
 import axios from "axios";
-import React, {useRef, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "../../context/auth-context";
-import {useCart} from "../../context/cart-context";
+import React, { useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useAuth } from "../../context/auth-context";
+import { useCart } from "../../context/cart-context";
 import "./Login.css";
 export const Login = () => {
   let usernameRef = useRef(null);
   let passwordRef = useRef(null);
-  const {login, setLogin} = useAuth();
+  const { login, setLogin } = useAuth();
   const [error, setError] = useState(null);
   let navigate = useNavigate();
   const loginHandler = async () => {
@@ -21,11 +22,12 @@ export const Login = () => {
         }
       );
       if (response.data.success) {
+        toast.success("logged in succesfuly")
         setLogin(true);
         localStorage.setItem("isLogin", "true");
         localStorage.setItem("username", `${usernameRef.current.value}`);
         localStorage.setItem("password", `${passwordRef.current.value}`);
-        navigate("/products", {replace: true});
+        navigate("/products", { replace: true });
       } else {
         setError(response.data.message);
       }
@@ -35,6 +37,11 @@ export const Login = () => {
       setError(error.response.data.message);
     }
   };
+  const guestLogin = () => {
+    usernameRef.current.value = "guest";
+    passwordRef.current.value = "guest";
+    loginHandler();
+  }
   return (
     <div className="login flex justify-content-center col align-items-center">
       <h2>Login</h2>
@@ -73,6 +80,8 @@ export const Login = () => {
         Login
       </button>
       <Link to="/signup">Sign Up instead</Link>
+      OR
+      <button className="button btn-secondary" onClick={guestLogin} >Login as guest user</button>
     </div>
   );
 };

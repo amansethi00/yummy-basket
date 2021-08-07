@@ -1,8 +1,9 @@
-import {useCart} from "../../context/cart-context";
+import { useCart } from "../../context/cart-context";
 import axios from "axios";
-export function IncDecButton({product}) {
+import { toast } from "react-toastify";
+export function IncDecButton({ product }) {
   const {
-    value: {cart},
+    value: { cart },
     dispatch,
   } = useCart();
   const getCartItem = (id) => {
@@ -12,8 +13,8 @@ export function IncDecButton({product}) {
     return getCartItem(product.id).quantity;
   };
   const updateButton = async (product, quantity) => {
-    console.log({"quantity from update buttton": quantity});
-    const {_id} = product;
+    console.log({ "quantity from update buttton": quantity });
+    const { _id } = product;
     console.log(_id);
     try {
       const response = await axios.post(
@@ -34,6 +35,7 @@ export function IncDecButton({product}) {
       console.log(response);
       if (response.data.success) {
         console.log("Success");
+        toast.success("product quantity updated in cart")
         dispatch({
           type: "SET_CART",
           payload: response.data.updatedCartInstancee,

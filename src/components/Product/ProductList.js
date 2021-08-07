@@ -1,13 +1,14 @@
-import {useState, useEffect} from "react";
-import {ProductListForm} from "./ProductListForm";
-import {ProductData} from "./ProductData";
+import { useState, useEffect } from "react";
+import { ProductListForm } from "./ProductListForm";
+import { ProductData } from "./ProductData";
 import axios from "axios";
-import {useCart} from "../../context/cart-context";
+import { useCart } from "../../context/cart-context";
+import Loader from "react-loader-spinner";
 
 export function ProductList() {
   const [sliderValue, setSliderValue] = useState(1200);
   const [error, setError] = useState(null);
-  const {dispatch} = useCart();
+  const { dispatch, value: { data } } = useCart();
   useEffect(() => {
     const anonFun = async () => {
       try {
@@ -16,7 +17,7 @@ export function ProductList() {
         );
         console.log(getProducts);
         if (getProducts.data.success) {
-          dispatch({type: "SET_PRODUCTS", payload: getProducts.data});
+          dispatch({ type: "SET_PRODUCTS", payload: getProducts.data });
         } else {
           setError(getProducts.data.message);
         }
@@ -94,6 +95,16 @@ export function ProductList() {
         sliderValue={sliderValue}
         setSliderValue={setSliderValue}
       />
+      {
+        (data.length === 0 && <Loader
+          type="Puff"
+          color="var(--primary-color)"
+          height={100}
+          width={100}
+          timeout={3000} //3 secs
+        />)
+
+      }
       <ProductData sliderValue={sliderValue} />
     </div>
   );
