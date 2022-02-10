@@ -1,9 +1,16 @@
+import { useState } from "react";
 import {useCart} from "../../context/cart-context";
 export function ProductListForm({sliderValue, setSliderValue}) {
   const {sortBy, fastDelivery, includeOutOfStock, dispatch} = useCart();
+  const [show,setShow] = useState(false);
+  if(!show){
+    return (
+      <button className='btn-secondary px-2' onClick={()=>setShow(true)} >Show filters</button>
+    )
+  }
 
   return (
-    <form>
+    <form className='flex flex-col' >
       <label>
         <input
           type="radio"
@@ -56,6 +63,7 @@ export function ProductListForm({sliderValue, setSliderValue}) {
           Value: <span id="demo">{sliderValue}</span>
         </p>
       </div>
+      <div>
       <input
         type="reset"
         onClick={() => {
@@ -64,6 +72,9 @@ export function ProductListForm({sliderValue, setSliderValue}) {
         }}
         className="outline-none btn-secondary-sm mg-top-half"
       />
+      <button className='btn-secondary-sm outline-none px-2' onClick={()=>setShow(false)}  >Hide filters</button>
+      </div>
+      
     </form>
   );
 }

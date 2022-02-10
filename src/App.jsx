@@ -34,8 +34,8 @@ const selectedTheme = {
 }
 function App() {
   const { theme, toggleTheme } = useTheme();
-  const { value: { cart, wishlist }, showToast, setShowToast, textToast } = useCart();
-  const { login } = useAuth();
+  const { value: { cart, wishlist }, showToast, setShowToast, textToast, dispatch } = useCart();
+  const { login, logoutHandler } = useAuth();
   const [cartItemsCount, setCartItemsCount] = useState(0);
   useEffect(() => {
     setCartItemsCount(cart.reduce(((acc, curr) => acc + parseInt(curr.quantity)), 0));
@@ -48,16 +48,18 @@ function App() {
       setShowToast(false);
     }, 1000);
   }
-  console.log({ login })
+
   return (
     <div style={{ backgroundColor: selectedTheme[theme].bg, color: selectedTheme[theme].color, minHeight: "100vh" }}>
-      <nav className="nav" style={{ backgroundColor: selectedTheme[theme].bg, color: selectedTheme[theme].color }} >
+      <nav className="flex flex-row justify-between p-3" style={{ backgroundColor: selectedTheme[theme].bg, color: selectedTheme[theme].color }} >
         <div className="nav-left">
-          <div className="md">🚚Mini Basket</div>
+          <Link to='/' className='no-underline' style={{ color: selectedTheme[theme].color, textDecoration: "none" }} >
+            <div className="md" style={{ color: selectedTheme[theme].color, textDecoration: "none" }}>🚚Mini Basket</div>
+          </Link>
         </div>
         <div className="nav-right flex row align-center">
           {"  "}
-          <Link to="/products" style={{ color: selectedTheme[theme].color, textDecoration: "none" }}> All Products</Link>
+          <Link to="/products" style={{ color: selectedTheme[theme].color, textDecoration: "none" }}  > All Products</Link>
           <Link to="/cart" className="  flex row align-center sm " style={{ color: selectedTheme[theme].color, textDecoration: "none" }}>
             <CartSvg style={{ fill: selectedTheme[theme].color }} />
             {cartItemsCount}
@@ -66,11 +68,16 @@ function App() {
             <WishlistSvg style={{ fill: selectedTheme[theme].color }} />
             {wishlist.length}
           </Link>
-          {!login && <Link to="/login" style={{ color: selectedTheme[theme].color, textDecoration: "none", paddingLeft: "1rem" }}> Login</Link>
+          {!login ? <Link to="/login" style={{ color: selectedTheme[theme].color, textDecoration: "none", paddingLeft: "1rem" }}> Login</Link> :
+            <button className='mx-2' onClick={() => {
+              dispatch({ type: "LOGOUT" });
+              logoutHandler();
+            }
+            }  >Logout</button>
           }
 
 
-          <button onClick={toggleTheme}>{theme === "light" ? <DarkTheme /> : <LightTheme />}</button>
+          {/* <button onClick={toggleTheme}>{theme === "light" ? <DarkTheme /> : <LightTheme />}</button> */}
         </div>
       </nav>
 
@@ -84,7 +91,7 @@ function App() {
       </div>}
       <Routes>
         <Route path={"/"} element={<Home />} />
-        <Route path={"/products"} element={<ProductList />} />
+        <PrivateRoute path={"/products"} element={<ProductList />} />
         <PrivateRoute path={"/cart"} element={<CartList />} />
         <PrivateRoute path={"/wishlist"} element={<WishList />} />
         <Route path={"/login"} element={<Login />} />
@@ -102,6 +109,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        className='mt-4'
       />
       {/* Same as */}
     </div>

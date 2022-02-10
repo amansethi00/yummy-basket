@@ -13,9 +13,14 @@ export const AuthProvider = ({children}) => {
       setLogin(true);
     }
   }, []);
-
+  const logoutHandler = async() => {
+    await localStorage.removeItem("isLogin");
+    await localStorage.removeItem("username");
+    await localStorage.removeItem("password");
+    setLogin(false);
+  }
   return (
-    <AuthContext.Provider value={{login, setLogin}}>
+    <AuthContext.Provider value={{login, setLogin,logoutHandler}}>
       {children}
     </AuthContext.Provider>
   );

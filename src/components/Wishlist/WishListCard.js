@@ -5,7 +5,7 @@ import {ReactComponent as WishlistedSvg} from "../../asssets/heart.svg";
 import {deleteFromWishList} from "../index";
 import {AddToCart, IncDecButton} from "../Button";
 import {useEffect, useState} from "react";
-export function WishListCard({product}) {
+export function WishListCard({product,setLoader}) {
   const {
     dispatch,
     value: {cart, wishlist},
@@ -13,7 +13,7 @@ export function WishListCard({product}) {
   const [itemQuantity, setItemQuantity] = useState(undefined);
 
   useEffect(() => {
-    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id));
+    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id)?.quantity);
   }, [cart]);
 
   return (
@@ -36,7 +36,7 @@ export function WishListCard({product}) {
       >
         <button
           className="outline-none"
-          onClick={() => deleteFromWishList({product, wishlist, dispatch})}
+          onClick={() => deleteFromWishList({product, wishlist, dispatch, setLoader})}
         >
           <WishlistedSvg />
         </button>
@@ -56,13 +56,12 @@ export function WishListCard({product}) {
           className="gray sm pd-top-half pd-bottom-half"
           style={{height: "2rem"}}
         >
-          Qty:1kg
           <div>{product.fastDelivery && <>Fast Delivery Available</>}</div>
         </div>
         {itemQuantity !== undefined ? (
-          <IncDecButton product={product} />
+          <IncDecButton product={product} itemQuantity={itemQuantity} setLoader={setLoader} />
         ) : (
-          <AddToCart product={product} />
+          <AddToCart product={product} setLoader={setLoader} />
         )}
       </div>
     </div>

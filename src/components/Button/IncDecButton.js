@@ -1,7 +1,7 @@
 import { useCart } from "../../context/cart-context";
 import axios from "axios";
 import { toast } from "react-toastify";
-export function IncDecButton({ product }) {
+export function IncDecButton({ product, setLoader,itemQuantity }) {
   const {
     value: { cart },
     dispatch,
@@ -12,10 +12,11 @@ export function IncDecButton({ product }) {
   const getCartItemQuantity = (product) => {
     return getCartItem(product.id).quantity;
   };
-  const updateButton = async (product, quantity) => {
+  const updateButton = async (product, quantity, isIncrement) => {
     console.log({ "quantity from update buttton": quantity });
     const { _id } = product;
     console.log(_id);
+    setLoader(true);
     try {
       const response = await axios.post(
         "https://ecom.amansethi00.repl.co/cart",
@@ -35,7 +36,12 @@ export function IncDecButton({ product }) {
       console.log(response);
       if (response.data.success) {
         console.log("Success");
-        toast.success("product quantity updated in cart")
+        if(isIncrement){
+          toast.success("product quantity added in cart")
+        }
+        else{
+          toast.info('product quantity decreased in cart')
+        }
         dispatch({
           type: "SET_CART",
           payload: response.data.updatedCartInstancee,
@@ -45,6 +51,8 @@ export function IncDecButton({ product }) {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoader(false);
     }
   };
   console.log(cart);
@@ -52,7 +60,7 @@ export function IncDecButton({ product }) {
   return (
     <div className="flex row align-items-center justify-content-space-between">
       <button
-        className="btn-primary lg"
+        className="font-bold text-lg m-1"
         onClick={() =>
           updateButton(
             product,
@@ -65,20 +73,18 @@ export function IncDecButton({ product }) {
         -
       </button>
       <div className="">
-        {
-          cart.filter((prev) => prev?.productId?._id === product._id)[0]
-            ?.quantity
-        }
+        {itemQuantity}
       </div>
       <button
-        className="btn-primary lg"
+        className="font-bold text-lg m-1"
         onClick={() =>
           updateButton(
             product,
             parseInt(
               cart.filter((prev) => prev?.productId?._id === product._id)[0]
                 .quantity
-            ) + 1
+            ) + 1,
+            true
           )
         }
       >

@@ -256,6 +256,13 @@ export function CartProvider({children}) {
           fastDelivery: false,
           includeOutOfStock: false,
         };
+      case 'LOGOUT':
+        console.log('log outtt')
+        return {
+          ...state,
+          cart:[],
+          wishlist:[],
+        }
       default:
         return {...state};
     }

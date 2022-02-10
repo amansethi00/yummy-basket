@@ -9,7 +9,7 @@ import axios from "axios";
 import {useEffect, useState} from "react";
 import {addToWishList, deleteFromWishList} from "../index";
 import {AddToCart} from "../Button";
-export function ProductListCard({product}) {
+export function ProductListCard({product,setLoader}) {
   const {
     dispatch,
     value: {cart, wishlist},
@@ -31,8 +31,8 @@ export function ProductListCard({product}) {
     );
   }, [wishlist]);
   useEffect(() => {
-    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id));
-  }, [cart]);
+    setItemQuantity(cart.find((prev) => prev?.productId?._id === product._id)?.quantity);
+  }, [cart,product]);
 
   return (
     <div
@@ -58,7 +58,7 @@ export function ProductListCard({product}) {
               <button
                 className="outline-none"
                 onClick={() =>
-                  deleteFromWishList({product, dispatch, wishlist})
+                  deleteFromWishList({product, dispatch, setLoader})
                 }
               >
                 <WishlistedSvg />
@@ -66,18 +66,18 @@ export function ProductListCard({product}) {
             ) : (
               <WishlistSvg
                 style={{fill: "white"}}
-                onClick={() => addToWishList({product, dispatch})}
+                onClick={() => addToWishList({product, dispatch, setLoader})}
               />
             )}
           </button>
 
           <div
             href={`/products/${product.id}`}
-            className="card-body text-left pd-quarter"
+            className="card-body text-left pd-quarter p-2"
           >
-            <div className="flex row align-items-center">
+            <div className="flex flex-row items-center ">
               <div className="bold ">₹{product.price}</div>
-              <div className="gray sm" style={{textDecoration: "line-through"}}>
+              <div className="gray sm mx-2" style={{textDecoration: "line-through"}}>
                 {product.mrp}
               </div>
             </div>
@@ -95,9 +95,9 @@ export function ProductListCard({product}) {
       </div>
 
       {itemQuantity !== undefined ? (
-        <IncDecButton product={product} />
+        <IncDecButton product={product} setLoader={setLoader} itemQuantity={itemQuantity}/>
       ) : (
-        <AddToCart product={product} />
+        <AddToCart product={product} setLoader={setLoader} />
       )}
     </div>
   );

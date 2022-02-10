@@ -2,29 +2,39 @@ import {useCart} from "../../context/cart-context";
 import {IncDecButton} from "../Button/IncDecButton";
 import axios from "axios";
 import "./Cart.css";
+import { useState } from "react";
+import LoaderIcon from "../Loader";
 export function CartList() {
   const {
     value: {cart},
     dispatch,
   } = useCart();
+  const [loader,setLoader] = useState(false);
   console.log(cart);
-  const filteredCart = cart.filter((item) => item.productId);
-  console.log({filteredCart});
+  // const filteredCart = cart.filter((item) => item.productId);
+  // console.log({filteredCart});
 
   return (
     <div className=" flex col justify-content-center align-items-center">
-      <h2> My Cart</h2>
-      <ul class="list-group">
-        {filteredCart.map((item) => {
+      <h2 className='text-lg font-bold mb-4' > My Cart</h2>
+      {/* <ul class="list-group"> */}
+        <table>
+          <tr class='border-2' >
+            <th >Item</th>
+            <th className='border-2' >Quantity</th>
+            <th className='border-2'>Price</th>
+            <th>Total Price (Quantity * Price)</th>
+          </tr>
+        {cart.map((item) => {
           return (
-            <div className="cart-item  flex row justify-content-space-between align-items-center">
-              <div className="pd-bottom-1 flex row">
+            <tr className="border-2">
+              <td className="m-1 flex row">
                 <img
                   src={item?.productId?.image}
                   className="card-image"
                   style={{width: "5rem", height: "100%"}}
                   alt="product-img"
-                ></img>
+                />
                 <div className="pd-left-half flex col  justify-content-space-between">
                   <div className="">{item?.productId?.name}</div>
                   <div className="row flex align-items-center ">
@@ -33,35 +43,42 @@ export function CartList() {
                         cart={cart}
                         product={item.productId}
                         dispatch={dispatch}
+                        setLoader={setLoader}
+                        itemQuantity={item.quantity}
                       />
                     </div>
-                    <span className="sm pd-left-1">
-                      x ₹{item?.productId?.price}
-                    </span>
+                    
                   </div>
                 </div>
-              </div>
-              <span className="bold">
+              </td>
+              <td className='pl-2 sm:pl-6' >{item?.quantity}</td>
+              <td className="sm pd-left-1">
+                      ₹{item?.productId?.price}
+                    </td>
+              <td className="bold pl-1 sm:pl-4">
                 ₹{item?.productId?.price * item.quantity}
-              </span>
-            </div>
+              </td>
+            </tr>
           );
         })}
-      </ul>
-      <div className="bold">
-        <span>
+        </table>
+
+      {/* </ul> */}
+      <div className="bold my-4">
+        <p className='' >
           {" "}
           TOTAL: ₹
-          {filteredCart.reduce(
+          {cart.reduce(
             (a, b) =>
               parseInt(a) +
               parseInt(b?.productId?.["price"]) * parseInt(b?.["quantity"]),
             0
           )}
-        </span>
-        <br />
-        <button className="btn btn-primary-md">Checkout</button>
+        </p>
+        {/* <br /> */}
+        <button className="btn mt-4 btn-primary-md">Checkout</button>
       </div>
+      {loader && <LoaderIcon/>}
     </div>
   );
 }

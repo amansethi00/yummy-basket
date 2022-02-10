@@ -46,7 +46,10 @@ export const Signup = () => {
     }
   };
   return (
-    <div className="login flex justify-content-center col align-items-center">
+    <form onSubmit={e=>{
+      e.preventDefault();
+      signUpHandler();
+    }} className="login flex justify-content-center col align-items-center">
       <h2>Signup</h2>
       <div className="form">
         {error && (
@@ -101,11 +104,11 @@ export const Signup = () => {
           />
         </div>
       </div>
-      <button className="button btn-secondary pd-1" onClick={signUpHandler}>
+      <button className="button btn-secondary pd-1">
         Create Account
       </button>
       <Link to="/login">Login instead</Link>
       <div className="sm"></div>
-    </div>
+    </form>
   );
 };

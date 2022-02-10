@@ -1,10 +1,11 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const deleteFromWishList = async ({ product, dispatch, wishlist }) => {
+export const deleteFromWishList = async ({ product, dispatch, setLoader }) => {
   console.log("in eishlist");
   console.log("productId", product._id);
   try {
+    setLoader(true);
     const response = await axios.delete(
       `https://ecom.amansethi00.repl.co/wishlist/${product._id}`,
       {
@@ -23,12 +24,16 @@ export const deleteFromWishList = async ({ product, dispatch, wishlist }) => {
       toast.success("product removed from wishlist")
     }
   } catch (error) {
+    toast.error("error in deleting product from wishlist");
     console.error("error while removing", error);
+  } finally {
+    setLoader(false);
   }
 };
 
-export const addToWishList = async ({ product, dispatch }) => {
+export const addToWishList = async ({ product, dispatch,setLoader }) => {
   try {
+    setLoader(true);
     const response = await axios.post(
       "https://ecom.amansethi00.repl.co/wishlist",
       { productId: product._id },
@@ -59,14 +64,18 @@ export const addToWishList = async ({ product, dispatch }) => {
       })
     }
   } catch (error) {
+    toast.error("error in adding product to wishlist");
     console.error(error);
+  } finally {
+    setLoader(false);
   }
 };
 
-export const addToCart = async ({ product, dispatch }) => {
+export const addToCart = async ({ product, dispatch ,setLoader }) => {
   const { _id } = product;
   console.log(_id);
   try {
+    setLoader(true);
     const response = await axios.post(
       "https://ecom.amansethi00.repl.co/cart",
       { productId: _id, quantity: 1 },
@@ -91,5 +100,7 @@ export const addToCart = async ({ product, dispatch }) => {
     }
   } catch (error) {
     console.log(error);
+  } finally {
+    setLoader(false);
   }
 };

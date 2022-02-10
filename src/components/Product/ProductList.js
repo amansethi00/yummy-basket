@@ -3,12 +3,14 @@ import { ProductListForm } from "./ProductListForm";
 import { ProductData } from "./ProductData";
 import axios from "axios";
 import { useCart } from "../../context/cart-context";
-import Loader from "react-loader-spinner";
+import { Link } from "react-router-dom";
+import LoaderIcon from "../Loader";
 
 export function ProductList() {
   const [sliderValue, setSliderValue] = useState(1200);
+  const [loader,setLoader] = useState(false);
   const [error, setError] = useState(null);
-  const { dispatch, value: { data } } = useCart();
+  const { dispatch, value: { data,cart } } = useCart();
   useEffect(() => {
     const anonFun = async () => {
       try {
@@ -90,22 +92,17 @@ export function ProductList() {
   return (
     <div className="text-center">
       {error && <h2>{error}</h2>}
-      <h2>Product Listing</h2>
+      <h2 >Product Listing</h2>
       <ProductListForm
         sliderValue={sliderValue}
         setSliderValue={setSliderValue}
       />
       {
-        (data.length === 0 && <Loader
-          type="Puff"
-          color="var(--primary-color)"
-          height={100}
-          width={100}
-          timeout={3000} //3 secs
-        />)
-
+        (data.length === 0 && <LoaderIcon/> )
       }
-      <ProductData sliderValue={sliderValue} />
+      <ProductData setLoader={setLoader} sliderValue={sliderValue} />
+      {loader && <LoaderIcon/>}
+      {cart.length > 0 && <Link to={'/cart'}><button className='secondary btn-secondary outline px-4 py-2 rounded-md mt-4'>Go to Cart</button></Link>}
     </div>
   );
 }
