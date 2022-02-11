@@ -49,13 +49,11 @@ export function ProductData({sliderValue, setLoader}) {
     fastDelivery,
     includeOutOfStock
   );
-  console.log({filteredAndSortedData});
   const viewData = rangedData(filteredAndSortedData, sliderValue);
   setViewState(viewData);
 
   },[data, sortBy, fastDelivery, includeOutOfStock,sliderValue])
   
-  // console.log({viewData});
   return (
     <div className="flex row card card-body justify-content-center mg-top-half">
       {viewState.map((product) => {

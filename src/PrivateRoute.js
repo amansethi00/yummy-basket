@@ -6,8 +6,6 @@ import {Login} from "./components/Home/Login";
 
 export const PrivateRoute = ({path, element}) => {
   const {login} = useAuth();
-  console.log({login});
-  console.log(localStorage.getItem("isLogin"));
   return (
     <>
       {login ? (

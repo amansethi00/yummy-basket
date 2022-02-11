@@ -38,9 +38,7 @@ export const Signup = () => {
       } else {
         setError(response.data.message);
       }
-      console.log(response);
     } catch (error) {
-      // console.log(error.response.data.message);
       console.log(error);
       setError("error at server");
     }

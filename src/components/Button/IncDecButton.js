@@ -13,9 +13,7 @@ export function IncDecButton({ product, setLoader,itemQuantity }) {
     return getCartItem(product.id).quantity;
   };
   const updateButton = async (product, quantity, isIncrement) => {
-    console.log({ "quantity from update buttton": quantity });
     const { _id } = product;
-    console.log(_id);
     setLoader(true);
     try {
       const response = await axios.post(
@@ -33,9 +31,7 @@ export function IncDecButton({ product, setLoader,itemQuantity }) {
           },
         }
       );
-      console.log(response);
       if (response.data.success) {
-        console.log("Success");
         if(isIncrement){
           toast.success("product quantity added in cart")
         }
@@ -55,7 +51,6 @@ export function IncDecButton({ product, setLoader,itemQuantity }) {
       setLoader(false);
     }
   };
-  console.log(cart);
 
   return (
     <div className="flex row align-items-center justify-content-space-between">

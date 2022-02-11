@@ -40,9 +40,7 @@ function App() {
   useEffect(() => {
     setCartItemsCount(cart.reduce(((acc, curr) => acc + parseInt(curr.quantity)), 0));
   }, [cart])
-  console.log({ cartItemsCount });
   const { loading, error } = "";
-  console.log(textToast);
   if (showToast === true) {
     setTimeout(() => {
       setShowToast(false);

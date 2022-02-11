@@ -17,7 +17,6 @@ export function ProductList() {
         const getProducts = await axios.get(
           "https://ecom.amansethi00.repl.co/products"
         );
-        console.log(getProducts);
         if (getProducts.data.success) {
           dispatch({ type: "SET_PRODUCTS", payload: getProducts.data });
         } else {
@@ -43,10 +42,7 @@ export function ProductList() {
             },
           }
         );
-        console.log(response);
         if (response.data.success) {
-          console.log("cart console", response.data);
-          console.log("Success");
           dispatch({
             type: "SET_CART",
             payload: response.data,
@@ -73,9 +69,7 @@ export function ProductList() {
             },
           }
         );
-        console.log(response);
         if (response.data.success) {
-          console.log("Success");
           dispatch({
             type: "SET_WISHLIST",
             payload: response.data.productsInWishlist,

@@ -2,8 +2,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const deleteFromWishList = async ({ product, dispatch, setLoader }) => {
-  console.log("in eishlist");
-  console.log("productId", product._id);
   try {
     setLoader(true);
     const response = await axios.delete(
@@ -52,7 +50,6 @@ export const addToWishList = async ({ product, dispatch,setLoader }) => {
       });
       toast.success("product added to wishlist")
     } else {
-      console.log("clicked")
       toast.info(response.data.message, {
         position: "top-right",
         autoClose: 5000,
@@ -73,7 +70,6 @@ export const addToWishList = async ({ product, dispatch,setLoader }) => {
 
 export const addToCart = async ({ product, dispatch ,setLoader }) => {
   const { _id } = product;
-  console.log(_id);
   try {
     setLoader(true);
     const response = await axios.post(
@@ -88,7 +84,6 @@ export const addToCart = async ({ product, dispatch ,setLoader }) => {
       }
     );
     if (response.data.success) {
-      console.log("Success");
       dispatch({
         type: "SET_CART",
         payload: response.data.updatedCartInstancee,
@@ -96,7 +91,6 @@ export const addToCart = async ({ product, dispatch ,setLoader }) => {
       toast.success("product added to cart")
     } else {
       toast.info(response.data.message)
-      console.log("Error");
     }
   } catch (error) {
     console.log(error);

@@ -24,9 +24,6 @@ router.route('/')
         wishlistId:newWishlist._id,
         addressId:newAddresslist._id
       })
-      console.log({newCart});
-      console.log({newWishlist});
-      console.log({newAddresslist});
       res.json({ success: true, message: "testing ",user:newUser })
 
     }
